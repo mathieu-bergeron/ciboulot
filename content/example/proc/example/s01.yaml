@@ -1,0 +1,22 @@
+# vim: set fileencoding=utf-8 :
+
+controller: step
+data:
+    title:
+        |
+            **Click** here
+    image:
+        src: ../../captures/01.png
+        notes:
+            - type: box
+              top: 40
+              left: 250
+              height: 30
+              width: 30
+              background_stroke: linen
+
+            - type: text
+              text: click here
+              top: 80
+              left: 250
+              background: linen

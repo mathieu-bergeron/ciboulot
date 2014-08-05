@@ -1,0 +1,16 @@
+# vim: set fileencoding=utf-8 :
+
+controller: steps
+data:
+    title: 
+        |
+            This is an *example*
+    steps:
+        - ./example/s01
+        - ./example/s02
+        - ./example/s03
+    default:
+        - ./example/s01
+    also:
+        - ./proc/another_way
+

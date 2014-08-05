@@ -1,0 +1,22 @@
+# vim: set fileencoding=utf-8 :
+
+controller: step
+data:
+    title: 
+        |
+            And finally, **click** outside the box
+    image:
+        src: ../../captures/03.png
+        notes:
+            - type: box
+              top: 40
+              left: 500
+              height: 30
+              width: 20
+              background_stroke: goldenrod
+
+            - type: text
+              text: outside!
+              top: 80
+              left: 500
+              background: goldenrod

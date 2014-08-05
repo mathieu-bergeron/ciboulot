@@ -1,0 +1,12 @@
+# vim: set fileencoding=utf-8 :
+- controller: markdown
+  data:
+      var01: Hello
+      text:
+          |
+                # Test Markdown content
+
+                * a
+                * b
+                * var01
+                * [link](folder/test)
