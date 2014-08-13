@@ -155,3 +155,29 @@ controllers_module.controller 'proc', \
         $location.hash ''
         $scope.visible = false
 ]
+
+# tabs
+controllers_module.controller 'tabs', \
+                ['$scope', \
+                '$log', \
+                '$rootScope', \
+                '$location', \
+                 ($scope, \
+                 $log,  \
+                 $rootScope, \
+                 $location ) ->
+]
+
+# errors
+controllers_module.controller 'errors', \
+                ['$scope', \
+                '$log', \
+                '$rootScope', \
+                '$location', \
+                 ($scope, \
+                 $log,  \
+                 $rootScope, \
+                 $location ) ->
+
+    $scope.visible = false
+]

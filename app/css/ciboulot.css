@@ -166,6 +166,14 @@ p, div {
     display:inline;
 }
 
+.tabs-title > p{
+    display:inline;
+}
+
+.tab > p{
+    display:inline;
+}
+
 .title-static{
     position: static;
     margin-top:100px;

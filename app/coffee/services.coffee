@@ -272,8 +272,7 @@ services_module.service 'first_child_of_class', \
             children.push (angular.element child)
 
         for child in children
-            classes = child.attr 'class'
-            if classes != undefined and (classes.indexOf _class) > -1
+            if child.hasClass _class
                 return child
 
         for child in children

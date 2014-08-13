@@ -60,6 +60,7 @@ class BaseDirective extends AngularBase
     __module_install_function: (cls, module) ->
         module.directive
 
+
 # Error 
 class ErrorDirective extends BaseDirective
     __name: 'error'
@@ -70,7 +71,6 @@ class ErrorDirective extends BaseDirective
         msg = "resource not found: #{@$elm.attr 'src'}"
 
         @$elm.text msg
-
 
 # Directive class
 class ResourceDirective extends BaseDirective
@@ -282,7 +282,7 @@ class ProcDirective extends PartialDirective
 
         steps_div = @first_child_of_class @partial_elm, 'steps'
 
-        @steps_elm = "<div src='#{@resource_id}' ng-controller='steps' steps></div>"
+        @steps_elm = "<div src='#{@resource_id}' embed></div>"
         @steps_elm = (@$compile @steps_elm) @$scope
 
         steps_div.append @steps_elm
@@ -687,6 +687,62 @@ class RootDirective extends ResourceDirective
         @$scope.$watch @get_path.bind(@), @on_path_watcher.bind(@)
         @$scope.$watch @get_search.bind(@), @on_search_watcher.bind(@)
 
+class TabsDirective extends PartialDirective
+    __name: 'tabs'
+    __injections: PartialDirective.prototype.__injections.concat \
+        ['first_child_of_class',
+         'path_manipulator',
+         'MarkdownService']
+
+    display: () ->
+        # XXX: would be elegant to push @resource['data'] into @$scope
+        #      and use angular.js templating in partial .html file
+        #      but this is has to be "reconciled" with markdown compilation
+        #      perhaps a InlineMarkdownDirective (?)
+
+        compiled_partial = (@$compile @partial) @$scope
+        @$elm.append compiled_partial
+
+        tabs_title = @first_child_of_class @$elm, 'tabs-title'
+        tabs = @first_child_of_class @$elm, 'tabs'
+        tab_text = @first_child_of_class @$elm, 'tab-text'
+
+        title_html = (new @MarkdownService @resource['data']['title'], @resource_id, @mode).get_html()
+        tabs_title.append title_html
+
+
+        for tab in @resource['data']['tabs']
+            tab_title_html = (new @MarkdownService tab['title'], @resource_id, @mode).get_html()
+            new_tab = angular.element "<span class='proc-button tab'></span>"
+            new_tab.append tab_title_html
+            tabs.append new_tab
+
+            if 'text' of tab
+                tab_text_html = (new @MarkdownService tab['text'], @resource_id, @mode).get_html()
+                new_tab_text = angular.element "<spann class='tab-text'></span>"
+                new_tab_text.append tab_text_html
+
+                tab_text.append new_tab_text
+
+            else if 'embed' of tab
+                embed_html = "<div src=#{@path_manipulator.resolve_path @resource_id, tab['embed']} embed></div>"
+                compiled_embed = (@$compile embed_html) @$scope
+                tab_text.append compiled_embed
+
+class ErrorsDirective extends ModeDirective
+    __name: 'errors'
+    __injections: ModeDirective.prototype.__injections.concat \
+        ['first_child_of_class',
+         'MarkdownService']
+
+    display: () ->
+        for pair in @resource['data']
+            error_html = (new @MarkdownService pair['error'], @resource_id, @mode).get_html()
+            solution_html = (new @MarkdownService pair['solution'], @resource_id, @mode).get_html()
+
+            @$elm.append error_html
+            @$elm.append solution_html
+
 install_angular_cls directives_module, EmbedDirective
 install_angular_cls directives_module, MarkdownDirective
 install_angular_cls directives_module, RootDirective
@@ -694,3 +750,5 @@ install_angular_cls directives_module, ErrorDirective
 install_angular_cls directives_module, StepsDirective
 install_angular_cls directives_module, StepDirective
 install_angular_cls directives_module, ProcDirective
+install_angular_cls directives_module, TabsDirective
+install_angular_cls directives_module, ErrorsDirective
