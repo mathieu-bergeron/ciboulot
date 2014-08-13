@@ -17,12 +17,23 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# load constants from config file
-# for debug profile
-import load_constants
-load_constants.load_profile('debug')
+import os
+import sys
+import yaml
 
-import server
-server.launch(8888)
+CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
+ROOT_PATH = os.path.join(CURRENT_PATH,'..')
+CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
+SERVER_CONFIG_PATH = os.path.join(CONFIG_PATH, 'server')
 
+sys.path.append(SERVER_CONFIG_PATH)
 
+import constants
+from constants import CONFIG_FILE_PATH
+
+def load_profile(profile_name):
+    with open(CONFIG_FILE_PATH) as config_file:
+        config_yaml = yaml.load(config_file.read())
+        profile = config_yaml[profile_name]
+        for key, value in profile.items():
+            setattr(constants, key, value)

@@ -15,7 +15,11 @@
 
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-CONTENT_PATH: /home/mbergeron/ciboulot.ca/content/
-INDEX_PATH: /home/mbergeron/ciboulot.ca/src/app/prod.html
-ACCEPT_POST: false
+prod:
+    CONTENT_PATH: /home/mbergeron/ciboulot/content/
+    INDEX_PATH: /home/mbergeron/cegep/partages/src/ciboulot/app/prod.html
+    ACCEPT_POST: false
+debug:
+    CONTENT_PATH: /home/mbergeron/ciboulot/src/content
+    INDEX_PATH: /home/mbergeron/cegep/partages/src/ciboulot/app/index.html
+    ACCEPT_POST: true

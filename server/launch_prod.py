@@ -17,27 +17,10 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import os
-import sys
-import yaml
-
-CURRENT_PATH = os.path.dirname(os.path.realpath(__file__))
-ROOT_PATH = os.path.join(CURRENT_PATH,'..')
-CONFIG_PATH = os.path.join(ROOT_PATH, 'config')
-SERVER_CONFIG_PATH = os.path.join(CONFIG_PATH, 'server')
-
-sys.path.append(SERVER_CONFIG_PATH)
-
-import constants
-from constants import CONFIG_FILE_PATH
-
-# Before importing 'server'
-# patch 'constants' module
-# according to config.yaml
-with open(CONFIG_FILE_PATH) as config_file:
-    config_yaml = yaml.load(config_file.read())
-    for key, value in config_yaml.items():
-        setattr(constants, key, value)
+# load constants from config file
+# for prod profile
+import load_constants
+load_constants.load_profile('prod')
 
 # Now launch server
 import server
