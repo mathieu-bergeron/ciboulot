@@ -98,7 +98,7 @@ class MarkdownService extends BaseService
         ['path_manipulator']
 
     # XXX: $ must hence be escaped inside directives
-    __NAME_ARG: '\\$\\[([\\w_]+)( [^\\$\\n]*)?\\]'
+    __NAME_ARG: '\\$\\[([\\w_-]+)( [^\\$\\n]*)?\\]'
     __TEXT: '(\\([^\\$\\n\\)]*\\))*'
     __ONE_TEXT: '\\([^\\$\\n\\)]*\\)'
 
@@ -130,6 +130,8 @@ class MarkdownService extends BaseService
                 filename = @path_manipulator.filename_of_path directive.arg
                 """<a class='download-a' href='#{path}' download='#{filename}' target='_blank'>#{directive.text[0]}</a>"""
 
+            when "proc-list"
+                """<ul id='proc-list'></ul>"""
             else
                 ""
 

@@ -276,7 +276,8 @@ class MarkdownDirective extends ModeDirective
 class ProcDirective extends HashDirective
     __name: 'proc'
     __injections: HashDirective.prototype.__injections.concat \
-        ['path_manipulator']
+        ['MarkdownService',
+         'path_manipulator']
 
     watch_visible: () -> @$scope.visible
 
@@ -315,6 +316,7 @@ class ProcDirective extends HashDirective
         # XXX: procs are not located in-place
         #      push appended to procs_div
         @procs_div = angular.element (document.getElementById 'procs')
+        @proc_list = angular.element (document.getElementById 'proc-list')
         @cover_elm = angular.element (document.getElementById 'procs-cover')
 
         @partial_elm = (@$compile "<div ng-click='hide();' class='proc-partial'></div>") @$scope
@@ -335,6 +337,21 @@ class ProcDirective extends HashDirective
         @steps_elm = (@$compile @steps_elm) @$scope
 
         steps_div.append @steps_elm
+
+        if @proc_list != undefined
+            title = @resource['data']['title']
+            if title == undefined
+                title = "Not found: #{@resource_id}"
+
+            title_html = (new @MarkdownService title, @resource_id, 'display').get_html()
+
+            proc_title_a = angular.element "<a href='##{@path_manipulator.id_of_path @resource_id}' class='proc-title'></a>"
+            proc_title_a.append title_html
+
+            li = angular.element "<li></li>"
+            li.append proc_title_a
+
+            @proc_list.append li
 
         # watch for visibility
         @$scope.$watch (@watch_visible.bind @), (@on_visible_watcher.bind @)

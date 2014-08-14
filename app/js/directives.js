@@ -349,7 +349,7 @@
 
     ProcDirective.prototype.__name = 'proc';
 
-    ProcDirective.prototype.__injections = HashDirective.prototype.__injections.concat(['path_manipulator']);
+    ProcDirective.prototype.__injections = HashDirective.prototype.__injections.concat(['MarkdownService', 'path_manipulator']);
 
     ProcDirective.prototype.watch_visible = function() {
       return this.$scope.visible;
@@ -384,11 +384,12 @@
     };
 
     ProcDirective.prototype.display = function() {
-      var proc_a, proc_container, steps_div;
+      var li, proc_a, proc_container, proc_title_a, steps_div, title, title_html;
       if (this.$rootScope.__displayed_resources[this.resource_id] !== void 0) {
         return;
       }
       this.procs_div = angular.element(document.getElementById('procs'));
+      this.proc_list = angular.element(document.getElementById('proc-list'));
       this.cover_elm = angular.element(document.getElementById('procs-cover'));
       this.partial_elm = (this.$compile("<div ng-click='hide();' class='proc-partial'></div>"))(this.$scope);
       proc_container = angular.element("<div class='proc-container' ng-click='$event.stopPropagation();'>");
@@ -402,6 +403,18 @@
       this.steps_elm = "<div src='" + this.resource_id + "' embed></div>";
       this.steps_elm = (this.$compile(this.steps_elm))(this.$scope);
       steps_div.append(this.steps_elm);
+      if (this.proc_list !== void 0) {
+        title = this.resource['data']['title'];
+        if (title === void 0) {
+          title = "Not found: " + this.resource_id;
+        }
+        title_html = (new this.MarkdownService(title, this.resource_id, 'display')).get_html();
+        proc_title_a = angular.element("<a href='#" + (this.path_manipulator.id_of_path(this.resource_id)) + "' class='proc-title'></a>");
+        proc_title_a.append(title_html);
+        li = angular.element("<li></li>");
+        li.append(proc_title_a);
+        this.proc_list.append(li);
+      }
       this.$scope.$watch(this.watch_visible.bind(this), this.on_visible_watcher.bind(this));
       return this.$scope.$on('hide_procs', this.on_hide_procs.bind(this));
     };

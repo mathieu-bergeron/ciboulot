@@ -116,7 +116,7 @@
 
     MarkdownService.prototype.__injections = BaseService.prototype.__injections.concat(['path_manipulator']);
 
-    MarkdownService.prototype.__NAME_ARG = '\\$\\[([\\w_]+)( [^\\$\\n]*)?\\]';
+    MarkdownService.prototype.__NAME_ARG = '\\$\\[([\\w_-]+)( [^\\$\\n]*)?\\]';
 
     MarkdownService.prototype.__TEXT = '(\\([^\\$\\n\\)]*\\))*';
 
@@ -150,6 +150,8 @@
           path = this.path_manipulator.resolve_path(this.src, directive.arg);
           filename = this.path_manipulator.filename_of_path(directive.arg);
           return "<a class='download-a' href='" + path + "' download='" + filename + "' target='_blank'>" + directive.text[0] + "</a>";
+        case "proc-list":
+          return "<ul id='proc-list'></ul>";
         default:
           return "";
       }
