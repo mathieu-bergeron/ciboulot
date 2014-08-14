@@ -64,16 +64,51 @@ class BaseInstance extends AngularBase
 class PathManipulator extends BaseInstance
     __name: 'path_manipulator'
 
+    base: (path) ->
+        last_char = path[-1..]
+
+        # This is already a folder
+        if last_char == '/'
+            path
+        else
+            # This is a file
+            # take everything up to 
+            # first encoutered index, including
+            last_slash_index = (path.lastIndexOf '/')
+            path.substring 0, last_slash_index + 1
+
+    parent: (path) ->
+        last_char = path[-1..]
+
+        if last_char == '/'
+            # This is a folder
+            # remove the trailing '/'
+            # this becomes a file
+            # then take the base
+            @base path[...-1]
+        else
+            # This is a file
+            # take the base
+            # and then the parent
+            @parent (@base path)
+
     join_paths: (path1, path2) ->
-        last_slash_index = path1.lastIndexOf '/'
-
-        path1 = path1.substring 0, last_slash_index + 1
-
         if path2[0..1] == "./"
             path2 = path2[2..]
 
+            path1 = @base path1
 
-        "#{path1}#{path2}"
+            @join_paths path1, path2
+
+        else if path2[0..2] == "../"
+            path2 = path2[3..]
+
+            path1 = @parent path1
+
+            @join_paths path1, path2
+
+        else
+            "#{path1}#{path2}"
 
     resolve_path: (src, path) ->
         if path[0] == '/'

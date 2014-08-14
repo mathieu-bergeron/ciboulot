@@ -74,14 +74,39 @@
 
     PathManipulator.prototype.__name = 'path_manipulator';
 
+    PathManipulator.prototype.base = function(path) {
+      var last_char, last_slash_index;
+      last_char = path.slice(-1);
+      if (last_char === '/') {
+        return path;
+      } else {
+        last_slash_index = path.lastIndexOf('/');
+        return path.substring(0, last_slash_index + 1);
+      }
+    };
+
+    PathManipulator.prototype.parent = function(path) {
+      var last_char;
+      last_char = path.slice(-1);
+      if (last_char === '/') {
+        return this.base(path.slice(0, -1));
+      } else {
+        return this.parent(this.base(path));
+      }
+    };
+
     PathManipulator.prototype.join_paths = function(path1, path2) {
-      var last_slash_index;
-      last_slash_index = path1.lastIndexOf('/');
-      path1 = path1.substring(0, last_slash_index + 1);
       if (path2.slice(0, 2) === "./") {
         path2 = path2.slice(2);
+        path1 = this.base(path1);
+        return this.join_paths(path1, path2);
+      } else if (path2.slice(0, 3) === "../") {
+        path2 = path2.slice(3);
+        path1 = this.parent(path1);
+        return this.join_paths(path1, path2);
+      } else {
+        return "" + path1 + path2;
       }
-      return "" + path1 + path2;
     };
 
     PathManipulator.prototype.resolve_path = function(src, path) {
