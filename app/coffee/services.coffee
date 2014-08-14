@@ -89,6 +89,9 @@ class PathManipulator extends BaseInstance
 
         "#{path}"
 
+    filename_of_path: (path) ->
+        @id_of_path path
+
 class MarkdownService extends BaseService
     __name: 'MarkdownService'
     __injections: BaseService.prototype.__injections.concat \
@@ -121,6 +124,11 @@ class MarkdownService extends BaseService
                 """<span src='#{path}' ng-controller='proc' proc>
                 <a class='proc-a' href='##{path_id}'>#{directive.text[0]}</a>
                 </span>"""
+
+            when "download"
+                path = @path_manipulator.resolve_path @src, directive.arg
+                filename = @path_manipulator.filename_of_path directive.arg
+                """<a class='download-a' href='#{path}' download='#{filename}' target='_blank'>#{directive.text[0]}</a>"""
 
             else
                 ""
