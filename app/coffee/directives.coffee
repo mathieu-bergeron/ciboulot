@@ -854,6 +854,7 @@ class TabsDirective extends ModeDirective
 
             if 'text' of tab
                 tab_text_html = (new @MarkdownService tab['text'], @resource_id, @mode).get_html()
+                tab_text_html = (@$compile tab_text_html) @$scope
                 new_tab_text = angular.element "<spann class='tab-text'></span>"
                 new_tab_text.append tab_text_html
                 tab_text.append new_tab_text

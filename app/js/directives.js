@@ -1001,6 +1001,7 @@
         tabs.append(new_tab);
         if ('text' in tab) {
           tab_text_html = (new this.MarkdownService(tab['text'], this.resource_id, this.mode)).get_html();
+          tab_text_html = (this.$compile(tab_text_html))(this.$scope);
           new_tab_text = angular.element("<spann class='tab-text'></span>");
           new_tab_text.append(tab_text_html);
           tab_text.append(new_tab_text);
