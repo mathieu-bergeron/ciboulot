@@ -379,11 +379,15 @@
     };
 
     ProcDirective.prototype.on_hide_procs = function() {
-      return this.$scope.visible = false;
+      this.$scope.visible = false;
+      return this.$scope.$broadcast('hide');
     };
 
     ProcDirective.prototype.display = function() {
       var proc_a, proc_container, steps_div;
+      if (this.$rootScope.__displayed_resources[this.resource_id] !== void 0) {
+        return;
+      }
       this.procs_div = angular.element(document.getElementById('procs'));
       this.cover_elm = angular.element(document.getElementById('procs-cover'));
       this.partial_elm = (this.$compile("<div ng-click='hide();' class='proc-partial'></div>"))(this.$scope);
@@ -394,6 +398,7 @@
       proc_container.append(steps_div);
       this.partial_elm.append((this.$compile(proc_container))(this.$scope));
       this.procs_div.append(this.partial_elm);
+      this.$rootScope.__displayed_resources[this.resource_id] = this.partial_elm;
       this.steps_elm = "<div src='" + this.resource_id + "' embed></div>";
       this.steps_elm = (this.$compile(this.steps_elm))(this.$scope);
       steps_div.append(this.steps_elm);
@@ -956,6 +961,10 @@
       return current_tab.text_elm.css('display', 'block');
     };
 
+    TabsDirective.prototype.on_hide = function() {
+      return this.$scope.current_tab = 0;
+    };
+
     TabsDirective.prototype.display = function() {
       var embed_html, new_tab, new_tab_text, tab, tab_text, tab_text_html, tab_title_html, tabs, tabs_header, tabs_title, title_html, _i, _len, _ref12;
       tabs_header = angular.element("<div class='tabs-header'></div>");
@@ -992,7 +1001,8 @@
           text_elm: new_tab_text
         });
       }
-      return this.$scope.$watch(this.tab_watcher.bind(this), this.on_tab_watcher.bind(this));
+      this.$scope.$watch(this.tab_watcher.bind(this), this.on_tab_watcher.bind(this));
+      return this.$scope.$on('hide', this.on_hide.bind(this));
     };
 
     return TabsDirective;

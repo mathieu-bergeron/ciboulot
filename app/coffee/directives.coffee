@@ -303,8 +303,13 @@ class ProcDirective extends HashDirective
 
     on_hide_procs: () ->
         @$scope.visible = false
+        @$scope.$broadcast 'hide'
 
     display: () ->
+        # If already displayed, do nothing
+        if @$rootScope.__displayed_resources[@resource_id] != undefined
+            return
+
         # XXX: not using ./partials/proc/display.html
         #
         # XXX: procs are not located in-place
@@ -324,6 +329,7 @@ class ProcDirective extends HashDirective
         @partial_elm.append ((@$compile proc_container) @$scope)
 
         @procs_div.append @partial_elm
+        @$rootScope.__displayed_resources[@resource_id] = @partial_elm
 
         @steps_elm = "<div src='#{@resource_id}' embed></div>"
         @steps_elm = (@$compile @steps_elm) @$scope
@@ -782,6 +788,9 @@ class TabsDirective extends ModeDirective
         current_tab.title_elm.addClass 'current-tab'
         current_tab.text_elm.css 'display', 'block'
 
+    on_hide: () ->
+        @$scope.current_tab = 0
+
     display: () ->
         # XXX: would be elegant to push @resource['data'] into @$scope
         #      and use angular.js templating in partial .html file
@@ -841,6 +850,9 @@ class TabsDirective extends ModeDirective
 
         # watch current tab
         @$scope.$watch (@tab_watcher.bind @), (@on_tab_watcher.bind @)
+
+        # listen for parent scope hide
+        @$scope.$on 'hide', (@on_hide.bind @)
 
 class QuestionsDirective extends ResourceDirective
     __name: 'questions'
