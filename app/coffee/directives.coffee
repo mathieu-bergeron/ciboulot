@@ -167,6 +167,31 @@ class ModeDirective extends ResourceDirective
 
         @destroy_mode_watcher = @$scope.$watch @get_mode.bind(@), @on_mode_watcher.bind(@)
 
+class HashDirective extends ModeDirective
+    __name: 'hash'
+
+    ###
+    Watches:
+        * resource
+        * mode
+        * hash
+    ###
+
+    hash_watcher: () -> @$rootScope.__hash
+
+    on_hash_watcher: (hash, previous_hash) ->
+        @hash = hash
+        @on_hash()
+
+    on_hash: () ->
+        @display()
+
+    on_mode: () ->
+        if @destroy_hash_watcher != undefined
+            @destroy_hash_watcher()
+
+        @destroy_hash_watcher = @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
+
 class PartialDirective extends ModeDirective
     __name: 'partial'
     __injections: ModeDirective.prototype.__injections.concat \
@@ -200,34 +225,38 @@ class PartialDirective extends ModeDirective
 
         @destroy_partial_watcher = @$scope.$watch @get_partial.bind(@), @on_partial_watcher.bind(@)
 
-class MarkdownDirective extends PartialDirective
+class MarkdownDirective extends ModeDirective
     __name: 'markdown'
-    __injections: PartialDirective.prototype.__injections.concat \
-        ['first_child_of_class', \
-        'MarkdownService']
-    ###
-    Wait for resource, mode, and partial
-    ###
+    __injections: ModeDirective.prototype.__injections.concat \
+        ['MarkdownService']
 
     display: () ->
+        @$elm.empty()
+
         # When resource, mode and partial are available
         markdown_text = @resource['data']['text']
 
-        # Save to scope; this is necessary to compile partials
-        @$scope.markdown_text = markdown_text
-        @$scope.resource_id = @resource_id
+        @markdown_elm = angular.element "<div class='markdown'></div>"
+        @$elm.append @markdown_elm
 
-        @$elm.empty()
-        compiled_html = (@$compile @partial) @$scope
-        @$elm.append compiled_html
+        @$rootScope.__displayed_resources[@resource_id] = @markdown_elm
 
-        markdown_elm = undefined
-        markdown_elm = @first_child_of_class @$elm, 'markdown'
+        if @mode == 'static'
+            @$elm.append "<div class='filler' style='height:1000px; width:10px;'></div>"
 
-        @$rootScope.__displayed_resources[@resource_id] = compiled_html
+        if (@mode == 'display' or @mode == 'static')
+            @procs_elm = angular.element "<div id='procs'></div>"
+            @$elm.append @procs_elm
 
-        if (@mode == 'display' or @mode == 'static') and markdown_elm != undefined
+        if @mode == 'static'
+            @$elm.append "<div style='height:1000px; width:10px;'></div>"
 
+        if @mode == 'display'
+            @procs_cover_elm = (@$compile "<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>") @$scope
+            @procs_elm.append @procs_cover_elm
+
+        ## Add markdown
+        if (@mode == 'display' or @mode == 'static')
             markdown_service = new @MarkdownService markdown_text, @resource_id, @mode
 
             # NOTE: markdown_service will
@@ -238,12 +267,16 @@ class MarkdownDirective extends PartialDirective
 
             compiled_markdown = (@$compile markdown_html) @$scope
 
-            markdown_elm.append compiled_markdown
+            @markdown_elm.append compiled_markdown
 
-class ProcDirective extends PartialDirective
+        else if @mode == 'edit'
+            @markdown_elm.text markdown_text
+
+
+class ProcDirective extends HashDirective
     __name: 'proc'
-    __injections: PartialDirective.prototype.__injections.concat \
-        ['first_child_of_class']
+    __injections: HashDirective.prototype.__injections.concat \
+        ['path_manipulator']
 
     watch_visible: () -> @$scope.visible
 
@@ -265,22 +298,32 @@ class ProcDirective extends PartialDirective
         @partial_elm.css 'display', 'none'
 
         # Notify the child scope
+        # useful to e.g. reset to default tab or step
         @$scope.$broadcast 'hide'
 
+    on_hide_procs: () ->
+        @$scope.visible = false
+
     display: () ->
-        @cover_elm = angular.element "<div class='cover'></div>"
-        @partial_elm = angular.element "<div ng-click='hide();' class='proc-partial'></div>"
-        @partial_elm = (@$compile @partial_elm) @$scope
+        # XXX: not using ./partials/proc/display.html
+        #
+        # XXX: procs are not located in-place
+        #      push appended to procs_div
+        @procs_div = angular.element (document.getElementById 'procs')
+        @cover_elm = angular.element (document.getElementById 'procs-cover')
 
-        # install the proc div
-        compiled_partial = (@$compile @partial) @$scope
+        @partial_elm = (@$compile "<div ng-click='hide();' class='proc-partial'></div>") @$scope
 
-        @partial_elm.append compiled_partial
+        proc_container = angular.element "<div class='proc-container' ng-click='$event.stopPropagation();'>"
+        proc_a = angular.element "<a class='proc-hide proc-button' href='' ng-click='hide();'>x</a>"
+        steps_div = angular.element "<div class='steps'></div>"
 
-        @$elm.append @cover_elm
-        @$elm.append @partial_elm
+        proc_container.append proc_a
+        proc_container.append steps_div
 
-        steps_div = @first_child_of_class @partial_elm, 'steps'
+        @partial_elm.append ((@$compile proc_container) @$scope)
+
+        @procs_div.append @partial_elm
 
         @steps_elm = "<div src='#{@resource_id}' embed></div>"
         @steps_elm = (@$compile @steps_elm) @$scope
@@ -290,42 +333,46 @@ class ProcDirective extends PartialDirective
         # watch for visibility
         @$scope.$watch (@watch_visible.bind @), (@on_visible_watcher.bind @)
 
+        # receive hide_proc event from parent scope
+        @$scope.$on 'hide_procs', (@on_hide_procs.bind @)
+
     display_static: () ->
-        ###
-        Link to first of a series of steps panels
-        append to procs_div
-        ###
+        # XXX: not using ../partials/proc/static.html
+        steps_div = angular.element "<div class='steps'></div>"
 
         procs_div = angular.element (document.getElementById 'procs')
 
         @partial_elm = angular.element "<div></div>"
 
-        # install the proc div
-        compiled_partial = (@$compile @partial) @$scope
-
-        @partial_elm.append compiled_partial
+        @partial_elm.append steps_div
 
         procs_div.append @partial_elm
-
-        steps_div = @first_child_of_class @partial_elm, 'steps'
-
-        @steps_elm = "<div src='#{@resource_id}' ng-controller='steps' steps></div>"
+        @steps_elm = "<div src='#{@resource_id}' embed></div>"
         @steps_elm = (@$compile @steps_elm) @$scope
 
         steps_div.append @steps_elm
 
+    on_mode: () ->
+        super()
+        @hash_id = @path_manipulator.id_of_path @resource_id
 
-    on_partial: () ->
         switch @mode
             when 'static'
                 @display_static()
             else
                 @display()
 
+    on_hash: () ->
+        if @hash_id == @hash
+            @$scope.visible = true
+        else
+            @$scope.visible = false
 
-class StepsDirective extends PartialDirective
+
+
+class StepsDirective extends ModeDirective
     __name: 'steps'
-    __injections: PartialDirective.prototype.__injections.concat \
+    __injections: ModeDirective.prototype.__injections.concat \
         ['MarkdownService',  \
          'path_manipulator' ]
 
@@ -352,8 +399,19 @@ class StepsDirective extends PartialDirective
        @step_elms[@$scope.current_step].css 'display', 'block'
 
     install_partial: () ->
-        # Install/display all the steps
-        compiled_html = (@$compile @partial) @$scope
+        # not using ../partials/steps/...
+
+        if @mode == 'display'
+            previous = "<a class='proc-button steps-previous' href='' ng-click='previous_step();'>&lt;</href>"
+            next = "<a class='proc-button steps-next' href='' ng-click='next_step();'>&gt;</href>"
+            compiled_html = (@$compile "#{previous}#{next}") @$scope
+
+        else if @mode == 'static'
+            compiled_html = "<div class='steps'></div>"
+
+        else
+           compiled_html = "<div></div>"
+
         @$elm.append compiled_html
 
     display_title: () ->
@@ -421,7 +479,6 @@ class StepsDirective extends PartialDirective
             @$elm.append compiled_html
             @step_elms.push compiled_html
 
-
     display: () ->
         @install_partial()
         @display_title()
@@ -437,7 +494,7 @@ class StepsDirective extends PartialDirective
         @install_partial()
         @display_steps_static()
 
-    on_partial: () ->
+    on_mode: () ->
         # steps_length
         @$scope.steps_length = @resource['data']['steps'].length
 
@@ -677,6 +734,16 @@ class RootDirective extends ResourceDirective
         else
             @$rootScope.__mode = 'display'
 
+    hash_watcher: () -> @$location.hash()
+
+    on_hash_watcher: (hash, previous_hash) ->
+        @$rootScope.__hash = hash
+        @on_hash()
+
+    on_hash: () ->
+        if @$rootScope.__hash == ''
+            @$rootScope.__hash = undefined
+
     link: (scope, elm, attrs, controller) ->
         ###
         Avoid ResourceDirective.link, which starts with resource watcher
@@ -686,13 +753,34 @@ class RootDirective extends ResourceDirective
         # Watch path and search
         @$scope.$watch @get_path.bind(@), @on_path_watcher.bind(@)
         @$scope.$watch @get_search.bind(@), @on_search_watcher.bind(@)
+        @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
 
-class TabsDirective extends PartialDirective
+class TabsDirective extends ModeDirective
     __name: 'tabs'
-    __injections: PartialDirective.prototype.__injections.concat \
+    __injections: ModeDirective.prototype.__injections.concat \
         ['first_child_of_class',
          'path_manipulator',
          'MarkdownService']
+
+    tab_watcher: () -> @$scope.current_tab
+
+    on_tab_watcher: (tab_index, previous_tab_index) ->
+        if tab_index != undefined
+            @on_tab()
+
+    on_tab: () ->
+        @hide_all_tabs()
+        @show_current_tab()
+
+    hide_all_tabs: () ->
+        for tab in @tabs
+            tab.title_elm.removeClass 'current-tab'
+            tab.text_elm.css 'display', 'none'
+
+    show_current_tab: () ->
+        current_tab = @tabs[@$scope.current_tab]
+        current_tab.title_elm.addClass 'current-tab'
+        current_tab.text_elm.css 'display', 'block'
 
     display: () ->
         # XXX: would be elegant to push @resource['data'] into @$scope
@@ -700,20 +788,41 @@ class TabsDirective extends PartialDirective
         #      but this is has to be "reconciled" with markdown compilation
         #      perhaps a InlineMarkdownDirective (?)
 
-        compiled_partial = (@$compile @partial) @$scope
-        @$elm.append compiled_partial
+        # XXX: using partials like below is not worth it
+        #      for now. Until we can probably integrate
+        #      angular.js templates (see above), 
+        #      using a partial is more complicated and does
+        #      not simplify writing the directive
 
-        tabs_title = @first_child_of_class @$elm, 'tabs-title'
-        tabs = @first_child_of_class @$elm, 'tabs'
-        tab_text = @first_child_of_class @$elm, 'tab-text'
+        #compiled_partial = (@$compile @partial) @$scope
+        #@$elm.append compiled_partial
+
+        #tabs_header = @first_child_of_class @$elm, 'tabs-header'
+        #tabs_title = @first_child_of_class @$elm, 'tabs-title'
+        #tabs = @first_child_of_class @$elm, 'tabs'
+        #tab_text = @first_child_of_class @$elm, 'tab-text'
+
+        tabs_header = angular.element "<div class='tabs-header'></div>"
+        tabs_title = angular.element "<span class='proc-button tabs-title'></span>"
+        tabs = angular.element "<span class='tabs'></span>"
+        tab_text = angular.element "<span class='tab-text'></span>"
+
+        tabs_header.append tabs_title
+        tabs_header.append tabs
+
+        @$elm.append tabs_header
+        @$elm.append tab_text
 
         title_html = (new @MarkdownService @resource['data']['title'], @resource_id, @mode).get_html()
         tabs_title.append title_html
 
+        # Memorize tabs
+        @tabs = []
 
         for tab in @resource['data']['tabs']
             tab_title_html = (new @MarkdownService tab['title'], @resource_id, @mode).get_html()
-            new_tab = angular.element "<span class='proc-button tab'></span>"
+            new_tab = "<a href='' class='proc-button tab' ng-click='goto_tab(#{@tabs.length});'></a>"
+            new_tab = (@$compile new_tab) @$scope
             new_tab.append tab_title_html
             tabs.append new_tab
 
@@ -721,27 +830,56 @@ class TabsDirective extends PartialDirective
                 tab_text_html = (new @MarkdownService tab['text'], @resource_id, @mode).get_html()
                 new_tab_text = angular.element "<spann class='tab-text'></span>"
                 new_tab_text.append tab_text_html
-
                 tab_text.append new_tab_text
 
             else if 'embed' of tab
-                embed_html = "<div src=#{@path_manipulator.resolve_path @resource_id, tab['embed']} embed></div>"
-                compiled_embed = (@$compile embed_html) @$scope
-                tab_text.append compiled_embed
+                embed_html = "<div class='tab-text' src=#{@path_manipulator.resolve_path @resource_id, tab['embed']} embed></div>"
+                new_tab_text = (@$compile embed_html) @$scope
+                tab_text.append new_tab_text
 
-class ErrorsDirective extends ModeDirective
-    __name: 'errors'
-    __injections: ModeDirective.prototype.__injections.concat \
-        ['first_child_of_class',
-         'MarkdownService']
+            @tabs.push {title_elm:new_tab, text_elm: new_tab_text}
+
+        # watch current tab
+        @$scope.$watch (@tab_watcher.bind @), (@on_tab_watcher.bind @)
+
+class QuestionsDirective extends ResourceDirective
+    __name: 'questions'
+    __injections: ResourceDirective.prototype.__injections.concat \
+         ['MarkdownService']
 
     display: () ->
-        for pair in @resource['data']
-            error_html = (new @MarkdownService pair['error'], @resource_id, @mode).get_html()
-            solution_html = (new @MarkdownService pair['solution'], @resource_id, @mode).get_html()
+        @table_elm = angular.element "<div class='questions-table'></div>"
 
-            @$elm.append error_html
-            @$elm.append solution_html
+        title_row = angular.element "<div class='questions-row questions-header'></div>"
+        error_title = angular.element "<span class='questions-cell questions-title questions-title-error'>Erreur</span>"
+        solution_title = angular.element "<span class='questions-cell questions-title questions-title-solution'>Piste de solution</span>"
+
+        title_row.append error_title
+        title_row.append solution_title
+
+        @table_elm.append title_row
+
+        @$elm.append @table_elm
+
+        for pair in @resource['data']
+            question_html = (new @MarkdownService pair['question'], @resource_id, @mode).get_html()
+            answer_html = (new @MarkdownService pair['answer'], @resource_id, @mode).get_html()
+
+            question_html = (@$compile question_html) @$scope
+            answer_html = (@$compile answer_html) @$scope
+
+            new_row = angular.element "<div class='questions-row'></div>"
+
+            error_cell = angular.element "<div class='questions-cell questions-cell-error'></div>"
+            solution_cell = angular.element "<div class='questions-cell questions-cell-solution'></div>"
+
+            error_cell.append question_html
+            solution_cell.append answer_html
+
+            new_row.append error_cell
+            new_row.append solution_cell
+
+            @table_elm.append new_row
 
 install_angular_cls directives_module, EmbedDirective
 install_angular_cls directives_module, MarkdownDirective
@@ -751,4 +889,4 @@ install_angular_cls directives_module, StepsDirective
 install_angular_cls directives_module, StepDirective
 install_angular_cls directives_module, ProcDirective
 install_angular_cls directives_module, TabsDirective
-install_angular_cls directives_module, ErrorsDirective
+install_angular_cls directives_module, QuestionsDirective

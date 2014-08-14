@@ -117,16 +117,10 @@ class MarkdownService extends BaseService
                 path = @path_manipulator.resolve_path @src, directive.arg
                 path_id = @path_manipulator.id_of_path path
 
-                switch @mode
-                    when 'static'
-                        """<span src='#{path}' ng-controller='proc' proc>
-                        <a href='##{path_id}'>#{directive.text[0]}</a>
-                        </span>"""
-                    else
-                        # onclick:return false; means the click event is not propagated and $location.path() not changed
-                        """<span src='#{path}' ng-controller='proc' proc>
-                        <a class='proc-a' href='##{path_id}' ng-click='show();'>#{directive.text[0]}</a>
-                        </span>"""
+                # same for mode static or display
+                """<span src='#{path}' ng-controller='proc' proc>
+                <a class='proc-a' href='##{path_id}'>#{directive.text[0]}</a>
+                </span>"""
 
             else
                 ""

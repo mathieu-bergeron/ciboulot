@@ -72,10 +72,12 @@ controllers_module.controller 'markdown', \
                 ['$scope', \
                 '$log', \
                 '$rootScope', \
+                '$location', \
                 'save_resource', \
                  ($scope, \
                  $log,  \
                  $rootScope, \
+                 $location, \
                  save_resource \
                  ) ->
 
@@ -89,6 +91,10 @@ controllers_module.controller 'markdown', \
             $rootScope.resources[resource_id]['data']['text'] = markdown_text
 
             save_resource resource_id
+
+        # markdown has the procs cover
+        $scope.hide_procs = () ->
+            $location.hash ''
 ]
 
 # steps controller
@@ -148,12 +154,8 @@ controllers_module.controller 'proc', \
 
     $scope.visible = false
 
-    $scope.show = () ->
-        $scope.visible = true
-
     $scope.hide = () ->
         $location.hash ''
-        $scope.visible = false
 ]
 
 # tabs
@@ -166,10 +168,15 @@ controllers_module.controller 'tabs', \
                  $log,  \
                  $rootScope, \
                  $location ) ->
+
+    $scope.current_tab = 0
+
+    $scope.goto_tab = (tab_index) ->
+        $scope.current_tab = tab_index
 ]
 
-# errors
-controllers_module.controller 'errors', \
+# questions
+controllers_module.controller 'questions', \
                 ['$scope', \
                 '$log', \
                 '$rootScope', \
@@ -178,6 +185,4 @@ controllers_module.controller 'errors', \
                  $log,  \
                  $rootScope, \
                  $location ) ->
-
-    $scope.visible = false
 ]

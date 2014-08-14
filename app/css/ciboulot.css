@@ -75,8 +75,8 @@ p, div {
     position: fixed;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
+    width: 110%;
+    height: 110%;
     background-color: black;
     opacity: 0.7;
 }
@@ -180,3 +180,65 @@ p, div {
     display: block;
     width: auto;
 }
+
+.tabs-header{
+    position:relative;
+    left:-200px;
+    width:850px;
+}
+
+.tabs-title{
+    display:inline-block;
+    width:200px;
+    background-color:darkgray;
+    margin-right:50px;
+}
+
+.tabs{
+}
+
+.tab{
+    margin-left:10px;
+}
+
+.tab-text{
+    margin-top:40px;
+}
+
+.current-tab{
+    background-color:black;
+}
+
+
+.questions-row{
+    display:block;
+    margin:20px;
+}
+
+.questions-title{
+    margin:auto;
+    font-weight:bold;
+}
+
+.questions-title-error{
+    background-color: rgba(255,0,0,0.3)
+}
+
+.questions-title-solution{
+    background-color: rgba(0,255,0,0.3)
+}
+
+.questions-cell{
+    width:45%;
+    display:inline-block;
+    margin-left:15px;
+}
+
+.questions-cell-error{
+    background-color: rgba(255,0,0,0.3)
+}
+
+.questions-cell-solution{
+    background-color: rgba(0,255,0,0.3)
+}
+
