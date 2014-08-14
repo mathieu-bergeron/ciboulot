@@ -3,8 +3,6 @@
 
 config.yaml
 
-app/js/*
-
 scripts/phantom/static*
 scripts/phantom/save.js
 
