@@ -165,6 +165,10 @@ class MarkdownService extends BaseService
                 filename = @path_manipulator.filename_of_path directive.arg
                 """<a class='download-a' href='#{path}' download='#{filename}' target='_blank'>#{directive.text[0]}</a>"""
 
+            when "link"
+                path = @path_manipulator.resolve_path @src, directive.arg
+                """<a class='link-a' href='#{path}'>#{directive.text[0]}</a>"""
+
             when "proc-list"
                 """<ul id='proc-list'></ul>"""
             else
