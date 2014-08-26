@@ -277,7 +277,12 @@ class ProcDirective extends HashDirective
     __name: 'proc'
     __injections: HashDirective.prototype.__injections.concat \
         ['MarkdownService',
-         'path_manipulator']
+         'path_manipulator',
+         '$document']
+
+    constructor: () ->
+        #@body = (@$document.find 'body')[0]
+        @document = @$document[0]
 
     watch_visible: () -> @$scope.visible
 
@@ -291,8 +296,12 @@ class ProcDirective extends HashDirective
             @hide()
 
     show: () ->
+        scroll_y = @document.documentElement.scrollTop
+        #cover_height = @body.clientHeight
         @cover_elm.css 'display', 'block'
+        #@cover_elm.css 'height', "#{cover_height + 20}px"
         @partial_elm.css 'display', 'block'
+        @partial_elm.css 'top', "#{scroll_y}px"
 
     hide: () ->
         @cover_elm.css 'display', 'none'
