@@ -950,7 +950,7 @@
 
     TabsDirective.prototype.__name = 'tabs';
 
-    TabsDirective.prototype.__injections = ModeDirective.prototype.__injections.concat(['first_child_of_class', 'path_manipulator', 'MarkdownService']);
+    TabsDirective.prototype.__injections = ResourceDirective.prototype.__injections.concat(['first_child_of_class', 'path_manipulator', 'MarkdownService']);
 
     TabsDirective.prototype.tab_watcher = function() {
       return this.$scope.current_tab;
@@ -1033,7 +1033,7 @@
 
     return TabsDirective;
 
-  })(ModeDirective);
+  })(ResourceDirective);
 
   QuestionsDirective = (function(_super) {
     __extends(QuestionsDirective, _super);

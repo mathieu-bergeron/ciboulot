@@ -803,9 +803,15 @@ class RootDirective extends ResourceDirective
         @$scope.$watch @get_search.bind(@), @on_search_watcher.bind(@)
         @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
 
-class TabsDirective extends ModeDirective
+
+# FIXME: if this is ModeDirective
+#        then there is some cycle in the digest when
+#        * resources are already fetched and cached in @$rootScope.__resources
+#        * there is some cycle in the proc links
+#
+class TabsDirective extends ResourceDirective
     __name: 'tabs'
-    __injections: ModeDirective.prototype.__injections.concat \
+    __injections: ResourceDirective.prototype.__injections.concat \
         ['first_child_of_class',
          'path_manipulator',
          'MarkdownService']

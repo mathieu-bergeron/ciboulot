@@ -1,0 +1,10 @@
+# vim: set fileencoding=utf-8 :
+
+controller: questions
+data:
+    - question:
+          |
+              `permission non accordee`
+      answer:
+          |
+                $[proc ./dd2](see here)

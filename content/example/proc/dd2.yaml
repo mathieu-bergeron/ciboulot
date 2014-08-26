@@ -1,0 +1,36 @@
+# vim: set fileencoding=utf-8 :
+
+controller: tabs
+data:
+    title:
+        |
+            Copier bit à bit avec `dd`
+    tabs:
+        - title: Préparer
+          text:
+              |
+                  * Indentifier le fichier ou device source: `SOURCE`
+                  * Indentifier le fichier ou device cible: `CIBLE`
+                  * Indentifier la taille des blocs, en octets: `TAILLE` (p.ex: `512`)
+                  * Indentifier le nombre de blocs à copier: `NOMBRE` (p.ex: la taille de `SOURCE` en octets, divisé par `512`)
+                  
+        - title: Exécuter
+          text:
+              |
+                  Faire la commande
+                  
+                  * `dd if=SOURCE of=CIBLE bs=TAILLE count=NOMBRE`
+                  
+                  Pour copier tout le fichier ou device `SOURCE`:
+                  
+                  * `dd if=SOURCE of=CIBLE`
+                  
+                  ATTENTION: plusieurs device n'ont pas de taille et la commande ci-haut ne terminerait jamais (ou possiblement à la fin de l'espace disponible pour la `CIBLE`)
+                  
+        - title: Vérifier
+          text:
+              |
+                  Le fichier `CIBLE` a maintenant la bonne taille
+                  
+        - title: Erreurs possibles
+          embed: ./dd2__erreurs
