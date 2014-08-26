@@ -360,6 +360,7 @@
     ProcDirective.prototype.__injections = HashDirective.prototype.__injections.concat(['MarkdownService', 'path_manipulator', '$document']);
 
     function ProcDirective() {
+      this.body = (this.$document.find('body'))[0];
       this.document = this.$document[0];
     }
 
@@ -381,7 +382,7 @@
 
     ProcDirective.prototype.show = function() {
       var scroll_y;
-      scroll_y = this.document.documentElement.scrollTop;
+      scroll_y = this.document.documentElement.scrollTop || this.body.scrollTop;
       this.partial_elm.css('display', 'block');
       return this.partial_elm.css('top', "" + scroll_y + "px");
     };

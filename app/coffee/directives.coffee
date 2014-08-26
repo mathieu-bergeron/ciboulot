@@ -289,7 +289,7 @@ class ProcDirective extends HashDirective
          '$document']
 
     constructor: () ->
-        #@body = (@$document.find 'body')[0]
+        @body = (@$document.find 'body')[0]
         @document = @$document[0]
 
     watch_visible: () -> @$scope.visible
@@ -304,7 +304,10 @@ class ProcDirective extends HashDirective
             @hide()
 
     show: () ->
-        scroll_y = @document.documentElement.scrollTop
+        # FIXME: does this work in IE
+        #        perhaps should import full jQuery
+        scroll_y = @document.documentElement.scrollTop || @body.scrollTop
+
         #cover_height = @body.clientHeight
 
         # XXX: cover_elm is handled by the parent Markdown
