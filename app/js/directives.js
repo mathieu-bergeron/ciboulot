@@ -324,6 +324,7 @@
       if (this.mode === 'display') {
         this.procs_cover_elm = (this.$compile("<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>"))(this.$scope);
         this.procs_elm.append(this.procs_cover_elm);
+        this.$scope.$watch(this.hash_watcher.bind(this), this.on_hash_watcher.bind(this));
       }
       if (this.mode === 'display' || this.mode === 'static') {
         markdown_service = new this.MarkdownService(markdown_text, this.resource_id, this.mode);
@@ -332,6 +333,18 @@
         return this.markdown_elm.append(compiled_markdown);
       } else if (this.mode === 'edit') {
         return this.markdown_elm.text(markdown_text);
+      }
+    };
+
+    MarkdownDirective.prototype.hash_watcher = function() {
+      return this.$rootScope.__hash;
+    };
+
+    MarkdownDirective.prototype.on_hash_watcher = function(hash, old_hash) {
+      if (hash === '' || hash === void 0) {
+        return this.procs_cover_elm.css('display', 'none');
+      } else {
+        return this.procs_cover_elm.css('display', 'block');
       }
     };
 
@@ -369,13 +382,11 @@
     ProcDirective.prototype.show = function() {
       var scroll_y;
       scroll_y = this.document.documentElement.scrollTop;
-      this.cover_elm.css('display', 'block');
       this.partial_elm.css('display', 'block');
       return this.partial_elm.css('top', "" + scroll_y + "px");
     };
 
     ProcDirective.prototype.hide = function() {
-      this.cover_elm.css('display', 'none');
       this.partial_elm.css('display', 'none');
       return this.$scope.$broadcast('hide');
     };
@@ -392,7 +403,6 @@
       }
       this.procs_div = angular.element(document.getElementById('procs'));
       this.proc_list = angular.element(document.getElementById('proc-list'));
-      this.cover_elm = angular.element(document.getElementById('procs-cover'));
       this.partial_elm = (this.$compile("<div ng-click='hide();' class='proc-partial'></div>"))(this.$scope);
       proc_container = angular.element("<div class='proc-container' ng-click='$event.stopPropagation();'>");
       proc_a = angular.element("<a class='proc-hide proc-button' href='' ng-click='hide();'>x</a>");

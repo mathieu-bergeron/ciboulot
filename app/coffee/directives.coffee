@@ -254,6 +254,7 @@ class MarkdownDirective extends ModeDirective
         if @mode == 'display'
             @procs_cover_elm = (@$compile "<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>") @$scope
             @procs_elm.append @procs_cover_elm
+            @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
 
         ## Add markdown
         if (@mode == 'display' or @mode == 'static')
@@ -272,6 +273,13 @@ class MarkdownDirective extends ModeDirective
         else if @mode == 'edit'
             @markdown_elm.text markdown_text
 
+    hash_watcher: () -> @$rootScope.__hash
+
+    on_hash_watcher: (hash, old_hash) ->
+        if hash == '' or hash == undefined
+            @procs_cover_elm.css 'display', 'none'
+        else
+            @procs_cover_elm.css 'display', 'block'
 
 class ProcDirective extends HashDirective
     __name: 'proc'
@@ -298,13 +306,19 @@ class ProcDirective extends HashDirective
     show: () ->
         scroll_y = @document.documentElement.scrollTop
         #cover_height = @body.clientHeight
-        @cover_elm.css 'display', 'block'
+
+        # XXX: cover_elm is handled by the parent Markdown
+        #@cover_elm.css 'display', 'block'
+
         #@cover_elm.css 'height', "#{cover_height + 20}px"
         @partial_elm.css 'display', 'block'
         @partial_elm.css 'top', "#{scroll_y}px"
 
     hide: () ->
-        @cover_elm.css 'display', 'none'
+        # XXX: there is only one cover element
+        #      it should be diplayed/hidden by the parent Markdown directive
+        #@cover_elm.css 'display', 'none'
+
         @partial_elm.css 'display', 'none'
 
         # Notify the child scope
@@ -326,7 +340,9 @@ class ProcDirective extends HashDirective
         #      push appended to procs_div
         @procs_div = angular.element (document.getElementById 'procs')
         @proc_list = angular.element (document.getElementById 'proc-list')
-        @cover_elm = angular.element (document.getElementById 'procs-cover')
+
+        # cover_elm is handled by parent Markdown directive
+        #@cover_elm = angular.element (document.getElementById 'procs-cover')
 
         @partial_elm = (@$compile "<div ng-click='hide();' class='proc-partial'></div>") @$scope
 
