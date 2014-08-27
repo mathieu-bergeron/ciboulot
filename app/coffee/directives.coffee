@@ -759,6 +759,15 @@ class RootDirective extends ResourceDirective
         ###
         @$rootScope.__displayed_resources = {}
 
+        # FIXME: this should not be necessary
+        #        but right now resource cache leads to a bug
+        #        when there is a cycle in $[proc] directives
+        #
+        #        but when cache is emptied, performance seems to suffer
+        #
+        # @$rootScope.__resources = {}
+
+
         # resource
         @resource_id = @path
 
