@@ -77,6 +77,23 @@ pre > code {
     border-radius: 10px;
 }
 
+table{
+    margin:auto;
+}
+
+table,th,tr,td {
+    border: 1px solid black;
+    border-collapse:collapse;
+}
+
+th,tr,td {
+    padding:10px;
+}
+
+th {
+    background-color: lightgray;
+}
+
 .root{
     background-color:cornsilk;
     width:650px;
