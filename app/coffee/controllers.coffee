@@ -43,6 +43,8 @@ controllers_module.controller 'root', \
 
         $rootScope.__resources = {}
 
+        $rootScope.__files = {}
+
         # To detect cycles in embed
         $rootScope.__displayed_resources = {}
 

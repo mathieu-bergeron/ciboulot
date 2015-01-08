@@ -118,6 +118,73 @@ class ResourceDirective extends BaseDirective
         @$elm.append resource_elm
 
 
+# File directive
+# like a ResourceDirective, but fetches any file and displays it
+# NOTE: used only for .java files for now
+# TODO: could guess the controller by the extension
+# NOTE: the elm.attr 'src' is assume to contain the extension
+class FileDirective extends BaseDirective
+    __name : 'file'
+    __injections: BaseDirective.prototype.__injections.concat \
+        ['$rootScope', \
+        'fetch_file', \
+        'FETCHING']
+
+    link: (scope, elm, attrs, controller) ->
+        super scope, elm, attrs, controller
+        @file_path = elm.attr 'src'
+
+        if elm.attr 'first_line'
+            @first_line = parseInt (elm.attr 'first_line')
+
+        if elm.attr 'last_line'
+            @last_line = parseInt (elm.attr 'last_line')
+
+        @$scope.$watch @get_file.bind(@), @on_file_watcher.bind(@)
+
+    get_file: () ->
+        @file = @$rootScope.__files[@file_path]
+        @file
+
+    on_file_watcher: (file, old_file) ->
+        if file == undefined
+            @fetch_file @file_path
+        else if file != @FETCHING
+            @on_file()
+
+    on_file: () ->
+        # text is an excerpt
+        lines = @file.split '\n'
+
+        # TODO: best to hightlight the whole file
+        #       and then select an excerpt??
+
+        if @last_line
+            last_index = @last_line - 1
+            lines = lines[0..last_index]
+
+        if @first_line
+            first_index = @first_line - 1
+            lines = lines[first_index..]
+
+        @text = lines[0]
+        for l in lines[1..]
+            @text += "\n#{l}"
+
+        @display()
+
+    display: () ->
+        ###
+        Append resource to @$elm
+        ###
+        @$elm.empty()
+        code_text = "<pre><code>#{@text}</code></pre>"
+        code_elm = angular.element code_text
+        @$elm.append code_elm
+
+        hljs.initHighlighting();
+
+
 class EmbedDirective extends ResourceDirective
     __name: 'embed'
 
@@ -955,6 +1022,7 @@ class QuestionsDirective extends ResourceDirective
             @table_elm.append new_row
 
 install_angular_cls directives_module, EmbedDirective
+install_angular_cls directives_module, FileDirective
 install_angular_cls directives_module, MarkdownDirective
 install_angular_cls directives_module, RootDirective
 install_angular_cls directives_module, ErrorDirective

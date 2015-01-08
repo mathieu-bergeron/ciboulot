@@ -90,6 +90,10 @@ class FileHandler(tornado.web.RequestHandler):
 
     def guess_content_type(self, target_path):
         mimetype, encoding = mimetypes.guess_type(target_path)
+
+        if mimetype is None:
+            mimetype = "text/plain"
+
         if encoding is not None:
             return "%s; charset=%s" % (mimetype, encoding)
         else:

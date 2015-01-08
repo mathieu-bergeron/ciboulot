@@ -3,7 +3,7 @@
   'use strict';
   angular;
   fabric;
-  var AngularBase, BaseDirective, EmbedDirective, ErrorDirective, HashDirective, MarkdownDirective, ModeDirective, PartialDirective, ProcDirective, QuestionsDirective, ResourceDirective, RootDirective, StepDirective, StepsDirective, TabsDirective, directives_module, install_angular_cls, _ref, _ref1, _ref10, _ref11, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9,
+  var AngularBase, BaseDirective, EmbedDirective, ErrorDirective, FileDirective, HashDirective, MarkdownDirective, ModeDirective, PartialDirective, ProcDirective, QuestionsDirective, ResourceDirective, RootDirective, StepDirective, StepsDirective, TabsDirective, directives_module, install_angular_cls, _ref, _ref1, _ref10, _ref11, _ref12, _ref2, _ref3, _ref4, _ref5, _ref6, _ref7, _ref8, _ref9,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -127,12 +127,86 @@
 
   })(BaseDirective);
 
+  FileDirective = (function(_super) {
+    __extends(FileDirective, _super);
+
+    function FileDirective() {
+      _ref2 = FileDirective.__super__.constructor.apply(this, arguments);
+      return _ref2;
+    }
+
+    FileDirective.prototype.__name = 'file';
+
+    FileDirective.prototype.__injections = BaseDirective.prototype.__injections.concat(['$rootScope', 'fetch_file', 'FETCHING']);
+
+    FileDirective.prototype.link = function(scope, elm, attrs, controller) {
+      FileDirective.__super__.link.call(this, scope, elm, attrs, controller);
+      this.file_path = elm.attr('src');
+      if (elm.attr('first_line')) {
+        this.first_line = parseInt(elm.attr('first_line'));
+      }
+      if (elm.attr('last_line')) {
+        this.last_line = parseInt(elm.attr('last_line'));
+      }
+      return this.$scope.$watch(this.get_file.bind(this), this.on_file_watcher.bind(this));
+    };
+
+    FileDirective.prototype.get_file = function() {
+      this.file = this.$rootScope.__files[this.file_path];
+      return this.file;
+    };
+
+    FileDirective.prototype.on_file_watcher = function(file, old_file) {
+      if (file === void 0) {
+        return this.fetch_file(this.file_path);
+      } else if (file !== this.FETCHING) {
+        return this.on_file();
+      }
+    };
+
+    FileDirective.prototype.on_file = function() {
+      var first_index, l, last_index, lines, _i, _len, _ref3;
+      lines = this.file.split('\n');
+      if (this.last_line) {
+        last_index = this.last_line - 1;
+        lines = lines.slice(0, +last_index + 1 || 9e9);
+      }
+      if (this.first_line) {
+        first_index = this.first_line - 1;
+        lines = lines.slice(first_index);
+      }
+      this.text = lines[0];
+      _ref3 = lines.slice(1);
+      for (_i = 0, _len = _ref3.length; _i < _len; _i++) {
+        l = _ref3[_i];
+        this.text += "\n" + l;
+      }
+      return this.display();
+    };
+
+    FileDirective.prototype.display = function() {
+      /*
+      Append resource to @$elm
+      */
+
+      var code_elm, code_text;
+      this.$elm.empty();
+      code_text = "<pre><code>" + this.text + "</code></pre>";
+      code_elm = angular.element(code_text);
+      this.$elm.append(code_elm);
+      return hljs.initHighlighting();
+    };
+
+    return FileDirective;
+
+  })(BaseDirective);
+
   EmbedDirective = (function(_super) {
     __extends(EmbedDirective, _super);
 
     function EmbedDirective() {
-      _ref2 = EmbedDirective.__super__.constructor.apply(this, arguments);
-      return _ref2;
+      _ref3 = EmbedDirective.__super__.constructor.apply(this, arguments);
+      return _ref3;
     }
 
     EmbedDirective.prototype.__name = 'embed';
@@ -164,8 +238,8 @@
     __extends(ModeDirective, _super);
 
     function ModeDirective() {
-      _ref3 = ModeDirective.__super__.constructor.apply(this, arguments);
-      return _ref3;
+      _ref4 = ModeDirective.__super__.constructor.apply(this, arguments);
+      return _ref4;
     }
 
     ModeDirective.prototype.__name = 'mode';
@@ -206,8 +280,8 @@
     __extends(HashDirective, _super);
 
     function HashDirective() {
-      _ref4 = HashDirective.__super__.constructor.apply(this, arguments);
-      return _ref4;
+      _ref5 = HashDirective.__super__.constructor.apply(this, arguments);
+      return _ref5;
     }
 
     HashDirective.prototype.__name = 'hash';
@@ -248,8 +322,8 @@
     __extends(PartialDirective, _super);
 
     function PartialDirective() {
-      _ref5 = PartialDirective.__super__.constructor.apply(this, arguments);
-      return _ref5;
+      _ref6 = PartialDirective.__super__.constructor.apply(this, arguments);
+      return _ref6;
     }
 
     PartialDirective.prototype.__name = 'partial';
@@ -296,8 +370,8 @@
     __extends(MarkdownDirective, _super);
 
     function MarkdownDirective() {
-      _ref6 = MarkdownDirective.__super__.constructor.apply(this, arguments);
-      return _ref6;
+      _ref7 = MarkdownDirective.__super__.constructor.apply(this, arguments);
+      return _ref7;
     }
 
     MarkdownDirective.prototype.__name = 'markdown';
@@ -471,8 +545,8 @@
     __extends(StepsDirective, _super);
 
     function StepsDirective() {
-      _ref7 = StepsDirective.__super__.constructor.apply(this, arguments);
-      return _ref7;
+      _ref8 = StepsDirective.__super__.constructor.apply(this, arguments);
+      return _ref8;
     }
 
     StepsDirective.prototype.__name = 'steps';
@@ -493,11 +567,11 @@
     };
 
     StepsDirective.prototype.hide_all_steps = function() {
-      var step_elm, _i, _len, _ref8, _results;
-      _ref8 = this.step_elms;
+      var step_elm, _i, _len, _ref9, _results;
+      _ref9 = this.step_elms;
       _results = [];
-      for (_i = 0, _len = _ref8.length; _i < _len; _i++) {
-        step_elm = _ref8[_i];
+      for (_i = 0, _len = _ref9.length; _i < _len; _i++) {
+        step_elm = _ref9[_i];
         _results.push(step_elm.css('display', 'none'));
       }
       return _results;
@@ -541,13 +615,13 @@
     };
 
     StepsDirective.prototype.display_steps = function() {
-      var compiled_html, default_step, html, i, step, step_path, _i, _len, _ref8, _results;
+      var compiled_html, default_step, html, i, step, step_path, _i, _len, _ref9, _results;
       this.step_elms = [];
       default_step = this.resource['data']['default'][0];
-      _ref8 = this.resource['data']['steps'];
+      _ref9 = this.resource['data']['steps'];
       _results = [];
-      for (i = _i = 0, _len = _ref8.length; _i < _len; i = ++_i) {
-        step = _ref8[i];
+      for (i = _i = 0, _len = _ref9.length; _i < _len; i = ++_i) {
+        step = _ref9[i];
         step_path = this.path_manipulator.resolve_path(this.resource_id, step);
         this.$scope.step_indices[step_path] = i;
         this.$scope.step_titles.push(void 0);
@@ -564,13 +638,13 @@
     };
 
     StepsDirective.prototype.display_steps_static = function() {
-      var compiled_html, default_step, html, i, id, step, step_path, title_html, _i, _len, _ref8, _results;
+      var compiled_html, default_step, html, i, id, step, step_path, title_html, _i, _len, _ref9, _results;
       this.step_elms = [];
       default_step = this.resource['data']['default'][0];
-      _ref8 = this.resource['data']['steps'];
+      _ref9 = this.resource['data']['steps'];
       _results = [];
-      for (i = _i = 0, _len = _ref8.length; _i < _len; i = ++_i) {
-        step = _ref8[i];
+      for (i = _i = 0, _len = _ref9.length; _i < _len; i = ++_i) {
+        step = _ref9[i];
         id = this.$scope.default_id;
         if (step === default_step) {
           this.$scope.default_step = i;
@@ -628,8 +702,8 @@
     __extends(StepDirective, _super);
 
     function StepDirective() {
-      _ref8 = StepDirective.__super__.constructor.apply(this, arguments);
-      return _ref8;
+      _ref9 = StepDirective.__super__.constructor.apply(this, arguments);
+      return _ref9;
     }
 
     StepDirective.prototype.__name = 'step';
@@ -725,11 +799,11 @@
     };
 
     StepDirective.prototype.add_canvas_notes = function() {
-      var note, _i, _len, _ref9, _results;
-      _ref9 = this.image['notes'];
+      var note, _i, _len, _ref10, _results;
+      _ref10 = this.image['notes'];
       _results = [];
-      for (_i = 0, _len = _ref9.length; _i < _len; _i++) {
-        note = _ref9[_i];
+      for (_i = 0, _len = _ref10.length; _i < _len; _i++) {
+        note = _ref10[_i];
         _results.push(this.add_canvas_note(note));
       }
       return _results;
@@ -769,10 +843,10 @@
     };
 
     StepDirective.prototype.step_titles_watcher = function() {
-      var step_title, _i, _len, _ref9;
-      _ref9 = this.$scope.$parent.step_titles;
-      for (_i = 0, _len = _ref9.length; _i < _len; _i++) {
-        step_title = _ref9[_i];
+      var step_title, _i, _len, _ref10;
+      _ref10 = this.$scope.$parent.step_titles;
+      for (_i = 0, _len = _ref10.length; _i < _len; _i++) {
+        step_title = _ref10[_i];
         if (step_title === void 0) {
           return false;
         }
@@ -859,8 +933,8 @@
     __extends(RootDirective, _super);
 
     function RootDirective() {
-      _ref9 = RootDirective.__super__.constructor.apply(this, arguments);
-      return _ref9;
+      _ref10 = RootDirective.__super__.constructor.apply(this, arguments);
+      return _ref10;
     }
 
     RootDirective.prototype.__name = 'root';
@@ -945,8 +1019,8 @@
     __extends(TabsDirective, _super);
 
     function TabsDirective() {
-      _ref10 = TabsDirective.__super__.constructor.apply(this, arguments);
-      return _ref10;
+      _ref11 = TabsDirective.__super__.constructor.apply(this, arguments);
+      return _ref11;
     }
 
     TabsDirective.prototype.__name = 'tabs';
@@ -969,11 +1043,11 @@
     };
 
     TabsDirective.prototype.hide_all_tabs = function() {
-      var tab, _i, _len, _ref11, _results;
-      _ref11 = this.tabs;
+      var tab, _i, _len, _ref12, _results;
+      _ref12 = this.tabs;
       _results = [];
-      for (_i = 0, _len = _ref11.length; _i < _len; _i++) {
-        tab = _ref11[_i];
+      for (_i = 0, _len = _ref12.length; _i < _len; _i++) {
+        tab = _ref12[_i];
         tab.title_elm.removeClass('current-tab');
         _results.push(tab.text_elm.css('display', 'none'));
       }
@@ -992,7 +1066,7 @@
     };
 
     TabsDirective.prototype.display = function() {
-      var embed_html, new_tab, new_tab_text, tab, tab_text, tab_text_html, tab_title_html, tabs, tabs_header, tabs_title, title_html, _i, _len, _ref11;
+      var embed_html, new_tab, new_tab_text, tab, tab_text, tab_text_html, tab_title_html, tabs, tabs_header, tabs_title, title_html, _i, _len, _ref12;
       tabs_header = angular.element("<div class='tabs-header'></div>");
       tabs_title = angular.element("<span class='proc-button tabs-title'></span>");
       tabs = angular.element("<span class='tabs'></span>");
@@ -1004,9 +1078,9 @@
       title_html = (new this.MarkdownService(this.resource['data']['title'], this.resource_id, this.mode)).get_html();
       tabs_title.append(title_html);
       this.tabs = [];
-      _ref11 = this.resource['data']['tabs'];
-      for (_i = 0, _len = _ref11.length; _i < _len; _i++) {
-        tab = _ref11[_i];
+      _ref12 = this.resource['data']['tabs'];
+      for (_i = 0, _len = _ref12.length; _i < _len; _i++) {
+        tab = _ref12[_i];
         tab_title_html = (new this.MarkdownService(tab['title'], this.resource_id, this.mode)).get_html();
         new_tab = "<a href='' class='proc-button tab' ng-click='goto_tab(" + this.tabs.length + ");'></a>";
         new_tab = (this.$compile(new_tab))(this.$scope);
@@ -1040,8 +1114,8 @@
     __extends(QuestionsDirective, _super);
 
     function QuestionsDirective() {
-      _ref11 = QuestionsDirective.__super__.constructor.apply(this, arguments);
-      return _ref11;
+      _ref12 = QuestionsDirective.__super__.constructor.apply(this, arguments);
+      return _ref12;
     }
 
     QuestionsDirective.prototype.__name = 'questions';
@@ -1049,7 +1123,7 @@
     QuestionsDirective.prototype.__injections = ResourceDirective.prototype.__injections.concat(['MarkdownService']);
 
     QuestionsDirective.prototype.display = function() {
-      var answer_html, error_cell, error_title, new_row, pair, question_html, solution_cell, solution_title, title_row, _i, _len, _ref12, _results;
+      var answer_html, error_cell, error_title, new_row, pair, question_html, solution_cell, solution_title, title_row, _i, _len, _ref13, _results;
       this.table_elm = angular.element("<div class='questions-table'></div>");
       title_row = angular.element("<div class='questions-row questions-header'></div>");
       error_title = angular.element("<span class='questions-cell questions-title questions-title-error'>Erreur</span>");
@@ -1058,10 +1132,10 @@
       title_row.append(solution_title);
       this.table_elm.append(title_row);
       this.$elm.append(this.table_elm);
-      _ref12 = this.resource['data'];
+      _ref13 = this.resource['data'];
       _results = [];
-      for (_i = 0, _len = _ref12.length; _i < _len; _i++) {
-        pair = _ref12[_i];
+      for (_i = 0, _len = _ref13.length; _i < _len; _i++) {
+        pair = _ref13[_i];
         question_html = (new this.MarkdownService(pair['question'], this.resource_id, this.mode)).get_html();
         answer_html = (new this.MarkdownService(pair['answer'], this.resource_id, this.mode)).get_html();
         question_html = (this.$compile(question_html))(this.$scope);
@@ -1083,6 +1157,8 @@
   })(ResourceDirective);
 
   install_angular_cls(directives_module, EmbedDirective);
+
+  install_angular_cls(directives_module, FileDirective);
 
   install_angular_cls(directives_module, MarkdownDirective);
 

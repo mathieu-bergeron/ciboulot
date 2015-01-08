@@ -9,6 +9,7 @@
   controllers_module.controller('root', [
     '$log', '$scope', '$rootScope', function($log, $scope, $rootScope) {
       $rootScope.__resources = {};
+      $rootScope.__files = {};
       $rootScope.__displayed_resources = {};
       $rootScope.__partials = {};
       $rootScope.__mode = 'display';

@@ -171,6 +171,22 @@ class MarkdownService extends BaseService
 
             when "proc-list"
                 """<ul id='proc-list'></ul>"""
+            when "java"
+                args = directive.arg.split ' '
+                path = args[0]
+                path = @path_manipulator.resolve_path @src, path
+                path = "#{path}.java"
+
+                first_line = ""
+                if args[1]
+                    first_line = "first_line='#{args[1]}'"
+
+                last_line = ""
+                if args[2]
+                    last_line = "last_line='#{args[2]}'"
+
+                "<div class='file' src='#{path}' #{first_line} #{last_line}  file></div>"
+
             else
                 ""
 
@@ -303,6 +319,25 @@ services_module.service 'fetch_partial', \
 
         ($http.get url).success (data, status, headers, config) ->
             $rootScope.__partials[key] = data
+]
+
+services_module.service 'fetch_file', \
+        ['$log', \
+        '$http', \
+        '$rootScope', \
+        'FETCHING', \
+        ($log, \
+        $http, \
+        $rootScope, \
+        FETCHING) ->
+
+    (path) ->
+        url = path
+
+        $rootScope.__files[path] = FETCHING
+
+        ($http.get url).success (data, status, headers, config) ->
+            $rootScope.__files[path] = data
 ]
 
 services_module.service 'first_child_of_class', \

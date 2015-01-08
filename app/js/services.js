@@ -162,7 +162,7 @@
     };
 
     MarkdownService.prototype.html_of_directive = function(directive) {
-      var filename, path, path_id;
+      var args, filename, first_line, last_line, path, path_id;
       switch (directive.name) {
         case "embed":
           path = this.path_manipulator.resolve_path(this.src, directive.arg);
@@ -180,6 +180,20 @@
           return "<a class='link-a' href='" + path + "'>" + directive.text[0] + "</a>";
         case "proc-list":
           return "<ul id='proc-list'></ul>";
+        case "java":
+          args = directive.arg.split(' ');
+          path = args[0];
+          path = this.path_manipulator.resolve_path(this.src, path);
+          path = "" + path + ".java";
+          first_line = "";
+          if (args[1]) {
+            first_line = "first_line='" + args[1] + "'";
+          }
+          last_line = "";
+          if (args[2]) {
+            last_line = "last_line='" + args[2] + "'";
+          }
+          return "<div class='file' src='" + path + "' " + first_line + " " + last_line + "  file></div>";
         default:
           return "";
       }
@@ -316,6 +330,19 @@
         $rootScope.__partials[key] = FETCHING;
         return ($http.get(url)).success(function(data, status, headers, config) {
           return $rootScope.__partials[key] = data;
+        });
+      };
+    }
+  ]);
+
+  services_module.service('fetch_file', [
+    '$log', '$http', '$rootScope', 'FETCHING', function($log, $http, $rootScope, FETCHING) {
+      return function(path) {
+        var url;
+        url = path;
+        $rootScope.__files[path] = FETCHING;
+        return ($http.get(url)).success(function(data, status, headers, config) {
+          return $rootScope.__files[path] = data;
         });
       };
     }
