@@ -79,4 +79,8 @@
 
   controllers_module.controller('questions', ['$scope', '$log', '$rootScope', '$location', function($scope, $log, $rootScope, $location) {}]);
 
+  controllers_module.controller('popup', ['$scope', '$log', '$rootScope', '$location', function($scope, $log, $rootScope, $location) {}]);
+
+  controllers_module.controller('embed', ['$scope', '$log', '$rootScope', '$location', function($scope, $log, $rootScope, $location) {}]);
+
 }).call(this);

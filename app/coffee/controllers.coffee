@@ -188,3 +188,25 @@ controllers_module.controller 'questions', \
                  $rootScope, \
                  $location ) ->
 ]
+
+controllers_module.controller 'popup', \
+                ['$scope', \
+                '$log', \
+                '$rootScope', \
+                '$location', \
+                 ($scope, \
+                 $log,  \
+                 $rootScope, \
+                 $location ) ->
+]
+
+controllers_module.controller 'embed', \
+                ['$scope', \
+                '$log', \
+                '$rootScope', \
+                '$location', \
+                 ($scope, \
+                 $log,  \
+                 $rootScope, \
+                 $location ) ->
+]

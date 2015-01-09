@@ -27,6 +27,7 @@ Markdown
 # Ciboulot globals
 AngularBase = window.ciboulot['AngularBase']
 install_angular_cls = window.ciboulot['install_angular_cls']
+window.ciboulot['popup'] = 0
 
 # NOTE
 # Services should NOT deal with html elements, or $scope, or $compile into angular templates
@@ -130,7 +131,9 @@ class PathManipulator extends BaseInstance
 class MarkdownService extends BaseService
     __name: 'MarkdownService'
     __injections: BaseService.prototype.__injections.concat \
-        ['path_manipulator']
+        ['path_manipulator', \
+         '$rootScope', \
+        ]
 
     # XXX: $ must hence be escaped inside directives
     __NAME_ARG: '\\$\\[([\\w_-]+)( [^\\$\\n]*)?\\]'
@@ -186,6 +189,20 @@ class MarkdownService extends BaseService
                     last_line = "last_line='#{args[2]}'"
 
                 "<div class='file' src='#{path}' #{first_line} #{last_line}  file></div>"
+
+            when "popup"
+
+                # must create a resource and push to @rootScope.__resources
+                path = "popup#{window.ciboulot['popup']}"
+                window.ciboulot['popup'] += 1
+                @$rootScope.__resources[path] = {   controller:directive.name, \
+                                                    data: {  \
+                                                            title: @src, \
+                                                            text: directive.text \
+                                                        } \
+                                                }
+
+                "<span class='popup' src='#{path}' popup></span>"
 
             else
                 ""

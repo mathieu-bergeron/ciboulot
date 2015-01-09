@@ -116,6 +116,10 @@ th {
 .markdown{
 }
 
+.embed[popup]{
+    display:inline;
+}
+
 .cover{
     position: fixed;
     top: 0px;

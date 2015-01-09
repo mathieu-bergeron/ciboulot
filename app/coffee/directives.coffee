@@ -60,8 +60,7 @@ class BaseDirective extends AngularBase
     __module_install_function: (cls, module) ->
         module.directive
 
-
-# Error 
+# Error
 class ErrorDirective extends BaseDirective
     __name: 'error'
 
@@ -78,6 +77,7 @@ class ResourceDirective extends BaseDirective
     __injections: BaseDirective.prototype.__injections.concat \
         ['$rootScope', \
         'fetch_resource', \
+        'MarkdownService', \
         'FETCHING']
 
     link: (scope, elm, attrs, controller) ->
@@ -112,79 +112,23 @@ class ResourceDirective extends BaseDirective
 
         cntl = @resource.controller
 
-        resource_elm = angular.element "<div class='#{@__name}' ng-controller='#{cntl}' src='#{@resource_id}' #{cntl}=''></div>"
+        if cntl == "embed"
+            src = @resource.data.src
+        else
+            src = @resource_id
+
+        resource_elm = angular.element "<div class='#{@__name}' ng-controller='#{cntl}' src='#{src}' #{cntl}=''></div>"
         resource_elm = (@$compile resource_elm) @$scope
 
         @$elm.append resource_elm
 
+        # inject into scope
+        # all the (name,val) pairs
+        # that are in all caps
+        for name of @resource.data
+            if /[A-Z]|[_]|[0-9]/.test name
+                @$scope[name] = @resource.data[name]
 
-# File directive
-# like a ResourceDirective, but fetches any file and displays it
-# NOTE: used only for .java files for now
-# TODO: could guess the controller by the extension
-# NOTE: the elm.attr 'src' is assume to contain the extension
-class FileDirective extends BaseDirective
-    __name : 'file'
-    __injections: BaseDirective.prototype.__injections.concat \
-        ['$rootScope', \
-        'fetch_file', \
-        'FETCHING']
-
-    link: (scope, elm, attrs, controller) ->
-        super scope, elm, attrs, controller
-        @file_path = elm.attr 'src'
-
-        if elm.attr 'first_line'
-            @first_line = parseInt (elm.attr 'first_line')
-
-        if elm.attr 'last_line'
-            @last_line = parseInt (elm.attr 'last_line')
-
-        @$scope.$watch @get_file.bind(@), @on_file_watcher.bind(@)
-
-    get_file: () ->
-        @file = @$rootScope.__files[@file_path]
-        @file
-
-    on_file_watcher: (file, old_file) ->
-        if file == undefined
-            @fetch_file @file_path
-        else if file != @FETCHING
-            @on_file()
-
-    on_file: () ->
-        # text is an excerpt
-        lines = @file.split '\n'
-
-        # TODO: best to hightlight the whole file
-        #       and then select an excerpt??
-
-        if @last_line
-            last_index = @last_line - 1
-            lines = lines[0..last_index]
-
-        if @first_line
-            first_index = @first_line - 1
-            lines = lines[first_index..]
-
-        @text = lines[0]
-        for l in lines[1..]
-            @text += "\n#{l}"
-
-        @display()
-
-    display: () ->
-        ###
-        Append resource to @$elm
-        ###
-        @$elm.empty()
-        code_text = "<code class='java'><pre>#{@text}</pre></code>"
-        code_elm = angular.element code_text
-
-        # hightlight on a case by case basis
-        hljs.highlightBlock code_elm[0]
-
-        @$elm.append code_elm
 
 class EmbedDirective extends ResourceDirective
     __name: 'embed'
@@ -296,7 +240,8 @@ class PartialDirective extends ModeDirective
 class MarkdownDirective extends ModeDirective
     __name: 'markdown'
     __injections: ModeDirective.prototype.__injections.concat \
-        ['MarkdownService']
+        ['MarkdownService',
+        '$interpolate']
 
     display: () ->
         @$elm.empty()
@@ -326,7 +271,11 @@ class MarkdownDirective extends ModeDirective
 
         ## Add markdown
         if (@mode == 'display' or @mode == 'static')
-            markdown_service = new @MarkdownService markdown_text, @resource_id, @mode
+
+            # interpolate before converting
+            interpolated_markdown = (@$interpolate markdown_text) @$scope
+
+            markdown_service = new @MarkdownService interpolated_markdown, @resource_id, @mode
 
             # NOTE: markdown_service will
             #       also contains accumulated info about the article, 
@@ -348,6 +297,92 @@ class MarkdownDirective extends ModeDirective
             @procs_cover_elm.css 'display', 'none'
         else
             @procs_cover_elm.css 'display', 'block'
+
+# File directive
+# like a ResourceDirective, but fetches any file and displays it
+# NOTE: used only for .java files for now
+# TODO: could guess the controller by the extension
+# NOTE: the elm.attr 'src' is assume to contain the extension
+class FileDirective extends BaseDirective
+    __name : 'file'
+    __injections: BaseDirective.prototype.__injections.concat \
+        ['$rootScope', \
+        'fetch_file', \
+        'FETCHING']
+
+    link: (scope, elm, attrs, controller) ->
+        super scope, elm, attrs, controller
+        @file_path = elm.attr 'src'
+
+        if elm.attr 'first_line'
+            @first_line = parseInt (elm.attr 'first_line')
+
+        if elm.attr 'last_line'
+            @last_line = parseInt (elm.attr 'last_line')
+
+        @$scope.$watch @get_file.bind(@), @on_file_watcher.bind(@)
+
+    get_file: () ->
+        @file = @$rootScope.__files[@file_path]
+        @file
+
+    on_file_watcher: (file, old_file) ->
+        if file == undefined
+            @fetch_file @file_path
+        else if file != @FETCHING
+            @on_file()
+
+    on_file: () ->
+        # text is an excerpt
+        lines = @file.split '\n'
+
+        # TODO: best to hightlight the whole file
+        #       and then select an excerpt??
+
+        if @last_line
+            last_index = @last_line - 1
+            lines = lines[0..last_index]
+
+        if @first_line
+            first_index = @first_line - 1
+            lines = lines[first_index..]
+
+        @text = lines[0]
+        for l in lines[1..]
+            @text += "\n#{l}"
+
+        @display()
+
+    display: () ->
+        ###
+        Append resource to @$elm
+        ###
+        @$elm.empty()
+        code_text = "<code class='java'><pre>#{@text}</pre></code>"
+        code_elm = angular.element code_text
+
+        # hightlight on a case by case basis
+        hljs.highlightBlock code_elm[0]
+
+        @$elm.append code_elm
+
+class PopupDirective extends HashDirective
+    __name: 'popup'
+    __injections: HashDirective.prototype.__injections.concat \
+        ['MarkdownService',
+        'path_manipulator'
+        ]
+
+    display: () ->
+        # XXX: will not interpolated in answers
+        #
+        @$elm.empty()
+
+        id = @path_manipulator.id_of_path @resource_id
+
+        text00 = angular.element "<a href='##{id}'>#{@resource.data.text[0]}</a>"
+        text01 = (new @MarkdownService @resource.data.text[1], @resource_id, 'display').get_html()
+        @$elm.append text00
 
 class ProcDirective extends HashDirective
     __name: 'proc'
@@ -1023,10 +1058,11 @@ class QuestionsDirective extends ResourceDirective
             @table_elm.append new_row
 
 install_angular_cls directives_module, EmbedDirective
-install_angular_cls directives_module, FileDirective
 install_angular_cls directives_module, MarkdownDirective
+install_angular_cls directives_module, FileDirective
 install_angular_cls directives_module, RootDirective
 install_angular_cls directives_module, ErrorDirective
+install_angular_cls directives_module, PopupDirective
 install_angular_cls directives_module, StepsDirective
 install_angular_cls directives_module, StepDirective
 install_angular_cls directives_module, ProcDirective

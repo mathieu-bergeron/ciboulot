@@ -11,6 +11,8 @@
 
   install_angular_cls = window.ciboulot['install_angular_cls'];
 
+  window.ciboulot['popup'] = 0;
+
   services_module = angular.module('ciboulot.services', []);
 
   BaseService = (function(_super) {
@@ -139,7 +141,7 @@
 
     MarkdownService.prototype.__name = 'MarkdownService';
 
-    MarkdownService.prototype.__injections = BaseService.prototype.__injections.concat(['path_manipulator']);
+    MarkdownService.prototype.__injections = BaseService.prototype.__injections.concat(['path_manipulator', '$rootScope']);
 
     MarkdownService.prototype.__NAME_ARG = '\\$\\[([\\w_-]+)( [^\\$\\n]*)?\\]';
 
@@ -194,6 +196,17 @@
             last_line = "last_line='" + args[2] + "'";
           }
           return "<div class='file' src='" + path + "' " + first_line + " " + last_line + "  file></div>";
+        case "popup":
+          path = "popup" + window.ciboulot['popup'];
+          window.ciboulot['popup'] += 1;
+          this.$rootScope.__resources[path] = {
+            controller: directive.name,
+            data: {
+              title: this.src,
+              text: directive.text 
+            }
+          };
+          return "<span class='popup' src='" + path + "' popup></span>";
         default:
           return "";
       }
