@@ -319,7 +319,7 @@
     MarkdownDirective.prototype.__injections = ModeDirective.prototype.__injections.concat(['MarkdownService', '$interpolate']);
 
     MarkdownDirective.prototype.display = function() {
-      var compiled_markdown, interpolated_markdown, markdown_html, markdown_service, markdown_text;
+      var compiled_markdown, interpolated_markdown, markdown_html, markdown_service, markdown_text, procs_cover_elm, procs_elm;
       this.$elm.empty();
       markdown_text = this.resource['data']['text'];
       this.markdown_elm = angular.element("<div class='markdown'></div>");
@@ -329,15 +329,25 @@
         this.$elm.append("<div class='filler' style='height:1000px; width:10px;'></div>");
       }
       if (this.mode === 'display' || this.mode === 'static') {
-        this.procs_elm = angular.element("<div id='procs'></div>");
-        this.$elm.append(this.procs_elm);
+        procs_elm = document.getElementById('procs');
+        if (procs_elm) {
+          this.procs_elm = angular.element(procs_elm);
+        } else {
+          this.procs_elm = angular.element("<div id='procs'></div>");
+          this.$elm.append(this.procs_elm);
+        }
       }
       if (this.mode === 'static') {
         this.$elm.append("<div style='height:1000px; width:10px;'></div>");
       }
       if (this.mode === 'display') {
-        this.procs_cover_elm = (this.$compile("<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>"))(this.$scope);
-        this.procs_elm.append(this.procs_cover_elm);
+        procs_cover_elm = document.getElementById('procs-cover');
+        if (procs_cover_elm) {
+          this.procs_cover_elm = angular.element(procs_cover_elm);
+        } else {
+          this.procs_cover_elm = (this.$compile("<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>"))(this.$scope);
+          this.procs_elm.append(this.procs_cover_elm);
+        }
         this.$scope.$watch(this.hash_watcher.bind(this), this.on_hash_watcher.bind(this));
       }
       if (this.mode === 'display' || this.mode === 'static') {
@@ -1205,8 +1215,6 @@
   install_angular_cls(directives_module, RootDirective);
 
   install_angular_cls(directives_module, ErrorDirective);
-
-  install_angular_cls(directives_module, PopupDirective);
 
   install_angular_cls(directives_module, StepsDirective);
 

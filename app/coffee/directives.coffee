@@ -258,15 +258,27 @@ class MarkdownDirective extends ModeDirective
             @$elm.append "<div class='filler' style='height:1000px; width:10px;'></div>"
 
         if (@mode == 'display' or @mode == 'static')
-            @procs_elm = angular.element "<div id='procs'></div>"
-            @$elm.append @procs_elm
+            # Always use the top-level procs element
+            procs_elm = (document.getElementById 'procs')
+            if procs_elm
+                @procs_elm = angular.element procs_elm
+            else
+                @procs_elm = angular.element "<div id='procs'></div>"
+                @$elm.append @procs_elm
 
         if @mode == 'static'
             @$elm.append "<div style='height:1000px; width:10px;'></div>"
 
         if @mode == 'display'
-            @procs_cover_elm = (@$compile "<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>") @$scope
-            @procs_elm.append @procs_cover_elm
+            # Always use the top-level procs-cover element
+            # if it exists
+            procs_cover_elm = (document.getElementById 'procs-cover')
+            if procs_cover_elm
+                @procs_cover_elm = angular.element procs_cover_elm
+            else
+                @procs_cover_elm = (@$compile "<div id='procs-cover' class='cover' style='display:none' ng-click='hide_procs();'></div>") @$scope
+                @procs_elm.append @procs_cover_elm
+
             @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
 
         ## Add markdown
@@ -366,6 +378,8 @@ class FileDirective extends BaseDirective
 
         @$elm.append code_elm
 
+
+# XXX: PopupDirective is not yet implemeted
 class PopupDirective extends HashDirective
     __name: 'popup'
     __injections: HashDirective.prototype.__injections.concat \
@@ -1062,7 +1076,8 @@ install_angular_cls directives_module, MarkdownDirective
 install_angular_cls directives_module, FileDirective
 install_angular_cls directives_module, RootDirective
 install_angular_cls directives_module, ErrorDirective
-install_angular_cls directives_module, PopupDirective
+# PopupDirective is not implemented
+#install_angular_cls directives_module, PopupDirective
 install_angular_cls directives_module, StepsDirective
 install_angular_cls directives_module, StepDirective
 install_angular_cls directives_module, ProcDirective
