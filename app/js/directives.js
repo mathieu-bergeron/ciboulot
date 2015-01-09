@@ -191,10 +191,10 @@
 
       var code_elm, code_text;
       this.$elm.empty();
-      code_text = "<pre><code>" + this.text + "</code></pre>";
+      code_text = "<code class='java'><pre>" + this.text + "</pre></code>";
       code_elm = angular.element(code_text);
-      this.$elm.append(code_elm);
-      return hljs.initHighlighting();
+      hljs.highlightBlock(code_elm[0]);
+      return this.$elm.append(code_elm);
     };
 
     return FileDirective;

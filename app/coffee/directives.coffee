@@ -178,12 +178,13 @@ class FileDirective extends BaseDirective
         Append resource to @$elm
         ###
         @$elm.empty()
-        code_text = "<pre><code>#{@text}</code></pre>"
+        code_text = "<code class='java'><pre>#{@text}</pre></code>"
         code_elm = angular.element code_text
+
+        # hightlight on a case by case basis
+        hljs.highlightBlock code_elm[0]
+
         @$elm.append code_elm
-
-        hljs.initHighlighting();
-
 
 class EmbedDirective extends ResourceDirective
     __name: 'embed'

@@ -77,6 +77,15 @@ pre > code {
     border-radius: 10px;
 }
 
+code.java {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    font-weight:bold;
+    border-radius: 10px;
+}
+
 table{
     margin:auto;
 }
