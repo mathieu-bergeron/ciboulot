@@ -153,9 +153,9 @@ th {
     box-shadow: 0 0 0 4px burlywood, 2px 1px 6px 4px burlywood;
 }
 
-.canvas-container{
+.lower-canvas{
+    position:relative;
     left:-20px;
-
 }
 
 .proc-button{
