@@ -870,9 +870,9 @@ class StepDirective extends ModeDirective
 
         # Fabric.js canvas
         # in ?mode=edit, use a regular Canvas
-        #@canvas = new fabric.StaticCanvas @canvas_id
-        @canvas = new fabric.Canvas @canvas_id
-        @canvas.on 'mouse:up', @log_canvas_edits.bind(@)
+        @canvas = new fabric.StaticCanvas @canvas_id
+        #@canvas = new fabric.Canvas @canvas_id
+        #@canvas.on 'mouse:up', @log_canvas_edits.bind(@)
 
 
 

@@ -978,8 +978,7 @@
       this.set_canvas_id();
       canvas_html = "<canvas  width='650px' height='356px' id='" + this.canvas_id + "'></canvas>";
       this.$elm.append(canvas_html);
-      this.canvas = new fabric.Canvas(this.canvas_id);
-      this.canvas.on('mouse:up', this.log_canvas_edits.bind(this));
+      this.canvas = new fabric.StaticCanvas(this.canvas_id);
       return this.populate_canvas();
     };
 
