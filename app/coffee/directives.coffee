@@ -739,6 +739,24 @@ class StepDirective extends ModeDirective
                 @canvas.add background_rect
                 @canvas.add rect
 
+                # TMP: to simplify writing notes in .yaml
+                # TMP
+
+                # TMP
+                # TMP
+                #
+    log_canvas_edits: (event) ->
+        target = event.target
+        msg = 
+        """\n\n
+                      top: #{parseInt(target.top)}
+                      left: #{parseInt(target.left)}
+                      height: #{parseInt(target.height * target.scaleY)}
+                      width: #{parseInt(target.width * target.scaleX)}\n\n
+        """
+        @$log.info msg
+
+
     add_canvas_notes: () ->
         for note in @image['notes']
             @add_canvas_note note
@@ -852,7 +870,12 @@ class StepDirective extends ModeDirective
 
         # Fabric.js canvas
         # in ?mode=edit, use a regular Canvas
-        @canvas = new fabric.StaticCanvas @canvas_id
+        #@canvas = new fabric.StaticCanvas @canvas_id
+        @canvas = new fabric.Canvas @canvas_id
+        @canvas.on 'mouse:up', @log_canvas_edits.bind(@)
+
+
+
 
         # Add image
         @populate_canvas()

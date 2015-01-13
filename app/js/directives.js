@@ -848,6 +848,13 @@
       }
     };
 
+    StepDirective.prototype.log_canvas_edits = function(event) {
+      var msg, target;
+      target = event.target;
+      msg = "\n\n\ntop: " + (parseInt(target.top)) + "\nleft: " + (parseInt(target.left)) + "\nheight: " + (parseInt(target.height * target.scaleY)) + "\nwidth: " + (parseInt(target.width * target.scaleX)) + "\n\n";
+      return this.$log.info(msg);
+    };
+
     StepDirective.prototype.add_canvas_notes = function() {
       var note, _i, _len, _ref11, _results;
       _ref11 = this.image['notes'];
@@ -971,7 +978,8 @@
       this.set_canvas_id();
       canvas_html = "<canvas  width='650px' height='356px' id='" + this.canvas_id + "'></canvas>";
       this.$elm.append(canvas_html);
-      this.canvas = new fabric.StaticCanvas(this.canvas_id);
+      this.canvas = new fabric.Canvas(this.canvas_id);
+      this.canvas.on('mouse:up', this.log_canvas_edits.bind(this));
       return this.populate_canvas();
     };
 
