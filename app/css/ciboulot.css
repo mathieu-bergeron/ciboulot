@@ -88,11 +88,13 @@ code.java {
 
 table{
     margin:auto;
+    border-collapse: separate;
+    empty-cells: hide;
 }
 
 table,th,tr,td {
-    border: 1px solid black;
-    border-collapse:collapse;
+    border: 1px solid gray;
+    border-spacing: 0px;
 }
 
 th,tr,td {
