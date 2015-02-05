@@ -91,6 +91,13 @@ code.java {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+
+
+    overflow: visible;
+    width: 750px;
+
+
+
 }
 
 table{
