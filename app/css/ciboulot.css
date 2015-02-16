@@ -82,7 +82,6 @@ code.java {
     padding:10px;
     padding-left:20px;
     margin-right:20px;
-    font-weight:bold;
     border-radius: 10px;
 
     -webkit-touch-callout: none;
@@ -92,12 +91,32 @@ code.java {
     -ms-user-select: none;
     user-select: none;
 
+    overflow: visible;
+    width: 750px;
+}
+
+/* highjs renames html class to xml */
+
+code.xml {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
 
     overflow: visible;
     width: 750px;
+}
 
+code.css {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
 
-
+    overflow: visible;
+    width: 750px;
 }
 
 table{

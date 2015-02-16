@@ -174,11 +174,12 @@ class MarkdownService extends BaseService
 
             when "proc-list"
                 """<ul id='proc-list'></ul>"""
-            when "java"
+            when "java", "html", "css"
+                extension = directive.name
                 args = directive.arg.split ' '
                 path = args[0]
                 path = @path_manipulator.resolve_path @src, path
-                path = "#{path}.java"
+                path = "#{path}.#{extension}"
 
                 first_line = ""
                 if args[1]
@@ -188,7 +189,7 @@ class MarkdownService extends BaseService
                 if args[2]
                     last_line = "last_line='#{args[2]}'"
 
-                "<div class='file' src='#{path}' #{first_line} #{last_line}  file></div>"
+                "<div class='file' src='#{path}' #{first_line} #{last_line} extension='#{extension}' file></div>"
 
             when "popup"
 

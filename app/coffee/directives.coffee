@@ -332,6 +332,9 @@ class FileDirective extends BaseDirective
         if elm.attr 'last_line'
             @last_line = parseInt (elm.attr 'last_line')
 
+        if elm.attr 'ext'
+            @extension = elm.attr 'extension'
+
         @$scope.$watch @get_file.bind(@), @on_file_watcher.bind(@)
 
     get_file: () ->
@@ -370,8 +373,18 @@ class FileDirective extends BaseDirective
         Append resource to @$elm
         ###
         @$elm.empty()
-        code_text = "<code class='java'><pre>#{@text}</pre></code>"
-        code_elm = angular.element code_text
+
+        pre = "<pre></pre>"
+        pre = angular.element pre
+        pre.text @text
+
+        if @extension
+            code_html = "<code class='#{@extension}'></code>"
+        else
+            code_html = "<code></code>"
+
+        code_elm = angular.element code_html
+        code_elm.append pre
 
         # hightlight on a case by case basis
         hljs.highlightBlock code_elm[0]
