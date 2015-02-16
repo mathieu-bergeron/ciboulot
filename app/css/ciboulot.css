@@ -95,9 +95,7 @@ code.java {
     width: 750px;
 }
 
-/* highjs renames html class to xml */
-
-code.xml {
+code.html {
     display:block;
     padding:10px;
     padding-left:20px;
