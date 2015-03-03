@@ -122,7 +122,7 @@ class ResourceDirective extends BaseDirective
 
         @$elm.append resource_elm
 
-        # inject into scope
+        # inject into child scope
         # all the (name,val) pairs
         # that are in all caps
         for name of @resource.data
@@ -883,9 +883,9 @@ class StepDirective extends ModeDirective
 
         # Fabric.js canvas
         # in ?mode=edit, use a regular Canvas
-        @canvas = new fabric.StaticCanvas @canvas_id
-        #@canvas = new fabric.Canvas @canvas_id
-        #@canvas.on 'mouse:up', @log_canvas_edits.bind(@)
+        #@canvas = new fabric.StaticCanvas @canvas_id
+        @canvas = new fabric.Canvas @canvas_id
+        @canvas.on 'mouse:up', @log_canvas_edits.bind(@)
 
 
         # Add image

@@ -152,7 +152,10 @@ class MarkdownService extends BaseService
         switch directive.name
             when "embed"
                 path = @path_manipulator.resolve_path @src, directive.arg
-                "<span src='#{path}' embed></span>"
+                # XXX: must add ng-controller='embed' lest all embed directive 
+                #      will have the same scope
+                #      (i.e. ng-controller creates the new scope)
+                "<span src='#{path}' ng-controller='embed' embed></span>"
 
             when "proc"
                 path = @path_manipulator.resolve_path @src, directive.arg
