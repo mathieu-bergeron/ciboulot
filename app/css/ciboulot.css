@@ -77,6 +77,53 @@ pre > code {
     border-radius: 10px;
 }
 
+.pseudo{
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
+    background-color: #F8F8FF;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    overflow: visible;
+    width: 750px;
+}
+
+.pseudo code{
+    background-color: #ECECF0;
+}
+
+.pseudo ol > li > ol > li > ol{
+    list-style-type:lower-roman;
+}
+
+.pseudo ol > li > ol > li > ol > li > ol{
+    list-style-type:lower-greek;
+}
+
+.pseudo li{
+    padding-top:20px;
+}
+
+.pseudo li > ol > li{
+    padding-top:5px;
+}
+
+.pseudo li > ul > li{
+    padding-top:5px;
+}
+
+.pseudo ul{
+    list-style-type:square;
+}
+
 code.java {
     display:block;
     padding:10px;
