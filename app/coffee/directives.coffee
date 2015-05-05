@@ -881,12 +881,16 @@ class StepDirective extends ModeDirective
 
         @$elm.append canvas_html
 
-        # Fabric.js canvas
-        # in ?mode=edit, use a regular Canvas
+        # Static canvas for prod
         @canvas = new fabric.StaticCanvas @canvas_id
+
+        # Uncomment below and use Javascript console
+        # XXX: do not push this on ciboulot.ca
+        #      i.e. use $ git stash
+        #           to discard that change before $ git pull
+
         #@canvas = new fabric.Canvas @canvas_id
         #@canvas.on 'mouse:up', @log_canvas_edits.bind(@)
-
 
         # Add image
         @populate_canvas()
