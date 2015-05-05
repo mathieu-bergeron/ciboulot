@@ -1,1 +1,2 @@
-sudo nohup python ../../server/launch_prod.py &
+cd ../../server
+nohup python launch_prod.py &
