@@ -867,36 +867,36 @@
     };
 
     StepDirective.prototype.scale_image = function() {
-      if (this.image_obj.width > this.canvas.width) {
-        this.image_obj.scaleToWidth(this.canvas.width);
+      if (this.image.width > this.canvas.width) {
+        this.image.scaleToWidth(this.canvas.width);
       }
-      if (this.image_obj.height > this.canvas.height) {
-        this.image_obj.scaleToHeight(this.canvas.height);
+      if (this.image.height > this.canvas.height) {
+        this.image.scaleToHeight(this.canvas.height);
       }
-      if ((this.image_obj.width * this.image_obj.scaleX) < this.canvas.width) {
-        return this.image_obj.set({
-          left: (this.canvas.width - this.image_obj.width * this.image.scaleX) / 2
+      if ((this.image.width * this.image.scaleX) < this.canvas.width) {
+        return this.image.set({
+          left: (this.canvas.width - this.image.width * this.image.scaleX) / 2
         });
       }
     };
 
     StepDirective.prototype.add_image = function() {
-      this.canvas.add(this.image_obj);
-      return this.canvas.sendToBack(this.image_obj);
+      this.canvas.add(this.image);
+      return this.canvas.sendToBack(this.image);
     };
 
     StepDirective.prototype.image_fetcher = function(image) {
-      this.image_obj = image;
+      this.image = image;
       this.scale_image();
-      this.add_image();
-      return this.add_canvas_notes();
+      return this.add_image();
     };
 
     StepDirective.prototype.populate_canvas = function() {
       var img_src;
       this.image = this.resource['data']['image'];
       img_src = this.path_manipulator.resolve_path(this.resource_id, this.image['src']);
-      return fabric.Image.fromURL(img_src, this.image_fetcher.bind(this));
+      fabric.Image.fromURL(img_src, this.image_fetcher.bind(this));
+      return this.add_canvas_notes();
     };
 
     StepDirective.prototype.step_titles_watcher = function() {
@@ -976,10 +976,9 @@
       }
       this.$elm.append(ol);
       this.set_canvas_id();
-      canvas_html = "<canvas  width='638px' height='453px' id='" + this.canvas_id + "'></canvas>";
+      canvas_html = "<canvas  width='650px' height='356px' id='" + this.canvas_id + "'></canvas>";
       this.$elm.append(canvas_html);
-      this.canvas = new fabric.Canvas(this.canvas_id);
-      this.canvas.on('mouse:up', this.log_canvas_edits.bind(this));
+      this.canvas = new fabric.StaticCanvas(this.canvas_id);
       return this.populate_canvas();
     };
 

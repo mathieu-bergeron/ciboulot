@@ -775,30 +775,24 @@ class StepDirective extends ModeDirective
             @add_canvas_note note
 
     scale_image: () ->
-        if @image_obj.width > @canvas.width
-            @image_obj.scaleToWidth @canvas.width
+        if @image.width > @canvas.width
+            @image.scaleToWidth @canvas.width
 
-        if @image_obj.height > @canvas.height
-            @image_obj.scaleToHeight @canvas.height
+        if @image.height > @canvas.height
+            @image.scaleToHeight @canvas.height
 
-        if (@image_obj.width * @image_obj.scaleX) < @canvas.width
-            @image_obj.set {left:(@canvas.width - @image_obj.width*@image.scaleX) / 2}
+        if (@image.width * @image.scaleX) < @canvas.width
+            @image.set {left:(@canvas.width - @image.width*@image.scaleX) / 2}
 
 
     add_image: () ->
-        @canvas.add @image_obj
-        @canvas.sendToBack @image_obj
+        @canvas.add @image
+        @canvas.sendToBack @image
 
     image_fetcher: (image) ->
-        @image_obj = image
+        @image = image
         @scale_image()
         @add_image()
-
-        # XXX: only add notes
-        #      after image
-        #      we need scale ratio of image
-        #      to convert top/left
-        @add_canvas_notes()
 
     populate_canvas: () ->
         @image = @resource['data']['image']
@@ -807,6 +801,8 @@ class StepDirective extends ModeDirective
         # Fetch image
         fabric.Image.fromURL img_src, @image_fetcher.bind @
 
+        # Add notes
+        @add_canvas_notes()
 
     step_titles_watcher: () ->
         for step_title in @$scope.$parent.step_titles
@@ -881,20 +877,20 @@ class StepDirective extends ModeDirective
 
         # Add image
         @set_canvas_id()
-        canvas_html = "<canvas  width='638px' height='453px' id='#{@canvas_id}'></canvas>"
+        canvas_html = "<canvas  width='650px' height='356px' id='#{@canvas_id}'></canvas>"
 
         @$elm.append canvas_html
 
         # Static canvas for prod
-        # @canvas = new fabric.StaticCanvas @canvas_id
+        @canvas = new fabric.StaticCanvas @canvas_id
 
         # Uncomment below and use Javascript console
         # XXX: do not push this on ciboulot.ca
         #      i.e. use $ git stash
         #           to discard that change before $ git pull
 
-        @canvas = new fabric.Canvas @canvas_id
-        @canvas.on 'mouse:up', @log_canvas_edits.bind(@)
+        #@canvas = new fabric.Canvas @canvas_id
+        #@canvas.on 'mouse:up', @log_canvas_edits.bind(@)
 
         # Add image
         @populate_canvas()
