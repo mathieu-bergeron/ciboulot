@@ -1004,7 +1004,7 @@ class TabsDirective extends ResourceDirective
         current_tab.text_elm.css 'display', 'block'
 
     on_hide: () ->
-        @$scope.current_tab = 0
+        @$scope.current_tab = @$scope.default_tab
 
     display: () ->
         # XXX: would be elegant to push @resource['data'] into @$scope
@@ -1066,6 +1066,13 @@ class TabsDirective extends ResourceDirective
 
         # watch current tab
         @$scope.$watch (@tab_watcher.bind @), (@on_tab_watcher.bind @)
+
+        # set default tab if possible
+        if @resource['data']['default_tab']
+            default_tab = @resource['data']['default_tab']
+            if default_tab < @tabs.length
+                @$scope.default_tab = default_tab
+                @$scope.current_tab = default_tab
 
         # listen for parent scope hide
         @$scope.$on 'hide', (@on_hide.bind @)
