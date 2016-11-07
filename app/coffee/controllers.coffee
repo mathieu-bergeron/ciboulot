@@ -172,6 +172,7 @@ controllers_module.controller 'tabs', \
                  $location ) ->
 
     $scope.current_tab = 0
+    $scope.default_tab = 0
 
     $scope.goto_tab = (tab_index) ->
         $scope.current_tab = tab_index
