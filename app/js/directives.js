@@ -867,6 +867,9 @@
     };
 
     StepDirective.prototype.scale_image = function() {
+      this.$log.info(this.canvas.width, this.canvas.height);
+      this.$log.info(this.image_obj.width, this.image_obj.height);
+      this.$log.info(this.image_obj.scaleY);
       if (this.image_obj.width > this.canvas.width) {
         this.image_obj.scaleToWidth(this.canvas.width);
       }
@@ -874,8 +877,9 @@
         this.image_obj.scaleToHeight(this.canvas.height);
       }
       if ((this.image_obj.width * this.image_obj.scaleX) < this.canvas.width) {
+        this.$log.info(this.image_obj.width * this.image_obj.scaleX);
         return this.image_obj.set({
-          left: (this.canvas.width - this.image_obj.width * this.image.scaleX) / 2
+          left: (this.canvas.width - this.image_obj.width * this.image_obj.scaleX) / 2
         });
       }
     };
@@ -976,7 +980,7 @@
       }
       this.$elm.append(ol);
       this.set_canvas_id();
-      canvas_html = "<canvas  width='638px' height='453px' id='" + this.canvas_id + "'></canvas>";
+      canvas_html = "<canvas  width='650px' height='356px' id='" + this.canvas_id + "'></canvas>";
       this.$elm.append(canvas_html);
       this.canvas = new fabric.StaticCanvas(this.canvas_id);
       return this.populate_canvas();

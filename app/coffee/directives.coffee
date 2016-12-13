@@ -775,6 +775,11 @@ class StepDirective extends ModeDirective
             @add_canvas_note note
 
     scale_image: () ->
+        @$log.info @canvas.width, @canvas.height
+        @$log.info @image_obj.width, @image_obj.height
+
+        @$log.info @image_obj.scaleY
+
         if @image_obj.width > @canvas.width
             @image_obj.scaleToWidth @canvas.width
 
@@ -782,8 +787,8 @@ class StepDirective extends ModeDirective
             @image_obj.scaleToHeight @canvas.height
 
         if (@image_obj.width * @image_obj.scaleX) < @canvas.width
-            @image_obj.set {left:(@canvas.width - @image_obj.width*@image.scaleX) / 2}
-
+            @$log.info (@image_obj.width * @image_obj.scaleX)
+            @image_obj.set {left:(@canvas.width - @image_obj.width*@image_obj.scaleX) / 2}
 
     add_image: () ->
         @canvas.add @image_obj
@@ -881,7 +886,13 @@ class StepDirective extends ModeDirective
 
         # Add image
         @set_canvas_id()
-        canvas_html = "<canvas  width='638px' height='453px' id='#{@canvas_id}'></canvas>"
+
+        # F43
+        #canvas_html = "<canvas  width='638px' height='453px' id='#{@canvas_id}'></canvas>"
+
+        # 513, LZ3
+        canvas_html = "<canvas  width='650px' height='356px' id='#{@canvas_id}'></canvas>"
+
 
         @$elm.append canvas_html
 
