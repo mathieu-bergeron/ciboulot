@@ -22,6 +22,16 @@ En fait, l'objectif est de garder le matériel ouvert:
 * Facile de créer sa propre version du cours
 * Fichiers textes: liberté d'utiliser ses propres outils, voire d'en créer des nouveaux
 
+# Vision
+
+On veut «faire mieux» que PowerPoint:
+
+* Plus dynamique, plus intéractif
+* Meilleure intégration Théorie - Pratique
+* Rapport de laboratoires semi-automatisés
+* Bien indexé/segmenté == navigable, cherchable
+* Plus collaboratif
+
 # Volet entreprise (ou OSBL?)
 
 1. Vendre du développement
@@ -238,6 +248,8 @@ L'énoncé de labo est à remplir directement en-ligne (en répondant aux questi
 * Dévelopement de la plateforme ciboulot (seeboolow.com)
 * Contrats de formation (avec du matériel déjà existant et disponible)
 * Hébergement payant de la plateforme (pour les institutions qui ne veulent pas héberger eux-même)
+
+
 
 
 
