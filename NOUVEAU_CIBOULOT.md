@@ -180,6 +180,11 @@ NOTE:
 * On imagine aussi des questions à choix de réponse (boutons radios) où l'étudiant n'édite pas vraiment le format .md
 
 
+BACKUP:
+
+* Génération de PDF / HTML comme backup en cas d'erreur. (alors les étudiants répondent «à la main» et remettent par courriel)
+
+
 
 
 
@@ -187,6 +192,23 @@ NOTE:
 
 ## Philo de design
 
+* Tout se fait par fichier et par GIT
+    * Allège le côté serveur
+    * L'utilisateur peut utiliser les outils qu'il veut en local
+
+
+* Pex pour mettre en-ligne automatiquement un examen à une heure donnée:
+    * il faut un script qui va s'exécuter en local à quelque part et faire le bon push vers le serveur GIT
+    * le reste se fait automatiquement
+
+
+* On peut bien sûr imaginer:
+    * des «outils locaux» standars
+    * des serveurs «d'outils» qui permettent d'automatiser certaines tâches
+        * encore une fois, on allège le serveur public en divisant les responsabilités entre plusieurs serveurs:
+            * serveur GIT
+            * serveur Web
+            * serveur d'outils
 
 
 
