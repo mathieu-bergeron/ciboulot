@@ -27,6 +27,7 @@ En fait, l'objectif est de garder le matériel ouvert:
 On veut «faire mieux» que PowerPoint:
 
 * Plus dynamique, plus intéractif
+* Schéma et tableau «dynamique» (pex qui s'affichent par étapes)
 * Meilleure intégration Théorie - Pratique
 * Rapport de laboratoires semi-automatisés
 * Bien indexé/segmenté == navigable, cherchable
@@ -149,6 +150,43 @@ P.ex pour un commentaire, on va écrire une ligne avant la section commentée (p
 
 		[wer3: un commentaire]
 		Une phrase qui fera l'objet d'un commentaire
+
+
+
+
+
+## Les examens
+
+On imagine:
+
+* Chaque étudiant a une branche
+* Les examens sont caché dans une branche privée
+* Pour rendre l'examen disponible:
+    * le copier dans la branche de l'étudiant
+    * ajouter une clé aux clés de l'étudiant (un fichier dans sa branche)
+
+
+L'étudiant travaille en local, mais:
+
+* Le fichier sur son disque reste toujours chiffré
+* L'app locale déchiffre «just in time» et l'étudiant peut seulement travailler dans le navigateur
+* Pour remettre, l'étudiant fait un commit/push de la version chiffrée
+* La correction se fait en local sur le poste prof, qui a toutes les clés pour déchiffrer
+
+
+NOTE:
+
+* L'étudiant n'a pas accès au fichier comme tel, mais à travers le navigateur il peut faire de l'édition de base, assez pour répondre aux questions
+* On imagine aussi des questions à choix de réponse (boutons radios) où l'étudiant n'édite pas vraiment le format .md
+
+
+
+
+
+
+
+## Philo de design
+
 
 
 
