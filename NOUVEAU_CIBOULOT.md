@@ -246,6 +246,8 @@ Ce qui fonctionne mal:
 
 # Liste de souhaits
 
+* Affichage «réactif» qui s'adapte à la taille de l'écran (avec bootstrap.js ?)
+
 * Deux versions PDF de chaque document:
 	* PDF à imprimer
 	* PDF à lire à l'écran
