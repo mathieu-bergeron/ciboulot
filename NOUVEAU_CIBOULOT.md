@@ -1,3 +1,26 @@
+# PRIORITÉ
+
+En réfléchissant, la priorité devrait être:
+
+* Définir le format d'entrée (.md étendu + yaml) 
+	* DOIT être facile à utiliser en GIT (e.g. l'ajout d'un commentaire se fait sur une autre ligne pour faciliter le diff)
+* Coder un parseur en Java pour ce format
+* Coder un format intermédiaire (i.e. le document au complet en mémoire)
+* Coder des front-end:
+	* un en HTML5 (p.ex. en ReactJS)
+	* un vers LaTex
+
+
+L'observation clé est:
+
+* Ce qui manque à l'ancien ciboulot c'est une notion claire de la structure du document
+* C'est difficile à faire directement en JS parce que c'est un peu «hacké»
+* Aussi, on le veut sur le serveur parce qu'on veut:
+	* utiliser le même code pour générer du .tex
+	* 
+
+
+
 # Vision 
 
 Plateforme «légère» de rédaction de matériel de cours:
