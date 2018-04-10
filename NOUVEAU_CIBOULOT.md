@@ -210,6 +210,14 @@ BACKUP:
 
 
 
+## Idée
+
+
+
+ZB5 et nouveau ciboulot: est-ce qu'on peut demander aux étudiants de pré-congurer
+leur labo dans un .yaml .... est-ce qu'on peut générer le rapport (ou une page web), ou
+le script, etc.
+
 
 
 
