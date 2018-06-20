@@ -1,3 +1,8 @@
+# Pour une version App
+
+Nouveau ciboulot:  pour une version App, faire une version mobile du site web et utiliser «add to home-screen» https://developer.chrome.com/multidevice/android/installtohomescreen
+
+
 # PRIORITÉ
 
 En réfléchissant, la priorité devrait être:
