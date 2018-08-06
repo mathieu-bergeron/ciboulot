@@ -888,10 +888,10 @@ class StepDirective extends ModeDirective
         @set_canvas_id()
 
         # F43
-        #canvas_html = "<canvas  width='638px' height='453px' id='#{@canvas_id}'></canvas>"
+        canvas_html = "<canvas  width='638px' height='453px' id='#{@canvas_id}'></canvas>"
 
         # 513, LZ3
-        canvas_html = "<canvas  width='650px' height='356px' id='#{@canvas_id}'></canvas>"
+        #canvas_html = "<canvas  width='650px' height='356px' id='#{@canvas_id}'></canvas>"
 
 
         @$elm.append canvas_html
