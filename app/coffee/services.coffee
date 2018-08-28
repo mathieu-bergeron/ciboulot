@@ -177,7 +177,7 @@ class MarkdownService extends BaseService
 
             when "proc-list"
                 """<ul id='proc-list'></ul>"""
-            when "java", "html", "css"
+            when "java", "html", "css", "xml"
                 extension = directive.name
                 args = directive.arg.split ' '
                 path = args[0]
