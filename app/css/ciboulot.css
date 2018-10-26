@@ -55,6 +55,15 @@ h1, h2{
     background-color:burlywood;
 } 
 
+h1{
+    padding-top:8px;
+} 
+
+h2{
+    padding-top:6px;
+} 
+
+
 h3{
 }
 
@@ -208,6 +217,11 @@ th {
 
 .embed[popup]{
     display:inline;
+}
+
+.embed{
+    position:relative;
+    left:-15px;
 }
 
 .cover{
