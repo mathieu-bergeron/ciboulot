@@ -182,6 +182,7 @@
         case "java":
         case "html":
         case "css":
+        case "xml":
           extension = directive.name;
           args = directive.arg.split(' ');
           path = args[0];
