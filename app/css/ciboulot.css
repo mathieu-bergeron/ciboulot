@@ -156,8 +156,8 @@ code.java {
     -ms-user-select: none;
     user-select: none;
 
-    overflow: visible;
-    width: 750px;
+    overflow: auto;
+    /*width: 750px*/
 }
 
 code.html {
