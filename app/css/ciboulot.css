@@ -72,6 +72,11 @@ p, div {
     padding-left:5px;
 }
 
+
+li {
+    padding:3px;
+}
+
 ol > li > ol {
     list-style-type:lower-alpha;
 }
