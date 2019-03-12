@@ -147,6 +147,14 @@ pre > code {
     list-style-type:square;
 }
 
+span.java-motcle {
+    color:blue;
+}
+
+span.java-argument {
+    color:green;
+}
+
 code.java-signature{
     display:block;
     padding:10px;
