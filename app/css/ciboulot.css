@@ -160,7 +160,7 @@ code.java-signature{
     padding:10px;
     background-color:#fffdf5;
     border-radius: 10px;
-    display:block;
+    display:inline-block;
     width:auto;
 
     -webkit-touch-callout: none;
