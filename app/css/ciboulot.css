@@ -160,7 +160,7 @@ code.java-signature{
     padding:10px;
     background-color:#fffdf5;
     border-radius: 10px;
-    display:inline;
+    display:block;
     width:auto;
 
     -webkit-touch-callout: none;
@@ -170,7 +170,7 @@ code.java-signature{
     -ms-user-select: none;
     user-select: none;
 
-    overflow: auto;
+    overflow: visible;
 }
 
 code.java {
@@ -456,4 +456,33 @@ kbd {
     box-shadow: 0 1px 0 rgba(12,13,14,0.2),0 0 0 2px #FFF inset;
     white-space: nowrap;
 }
+
+
+table.essai,th.essai,tr.essai,td.essai {
+    border: 3px solid black;
+}
+
+.essai-arguments{
+    padding-right:15px;
+}
+
+.essai-resultat{
+    padding-left:15px;
+}
+
+.essai-reussi{
+    background-color:lightgreen;
+}
+
+.essai-echoue{
+    background-color:lightpink;
+}
+
+.argument-nom{
+    font-weight:bold;
+}
+
+
+
+
 
