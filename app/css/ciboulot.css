@@ -225,6 +225,13 @@ table,th,tr,td {
     border-spacing: 0px;
 }
 
+table.java-signature,th.java-signature,tr.java-signature,td.java-signature {
+    border: 0px solid gray;
+    vertical-align:top;
+    border-spacing: 0px;
+}
+
+
 table.arguments,th.arguments,tr.arguments,td.arguments {
     border: 0px solid gray;
     vertical-align:top;
