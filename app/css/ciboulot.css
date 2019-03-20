@@ -155,24 +155,6 @@ span.java-argument {
     color:green;
 }
 
-code.java-signature{
-    display:block;
-    padding:10px;
-    background-color:#fffdf5;
-    border-radius: 10px;
-    display:inline-block;
-    width:auto;
-
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-    overflow: visible;
-}
-
 code.java {
     display:block;
     padding:10px;
@@ -225,10 +207,29 @@ table,th,tr,td {
     border-spacing: 0px;
 }
 
+
 table.java-signature,th.java-signature,tr.java-signature,td.java-signature {
     border: 0px solid gray;
     vertical-align:top;
     border-spacing: 0px;
+    margin:0px;
+    padding:0px;
+    margin-left:10px;
+}
+
+table.java-signature{
+    background-color:#fffdf5;
+    border-radius: 10px;
+    padding:10px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    overflow: visible;
 }
 
 
