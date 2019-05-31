@@ -202,6 +202,7 @@
         case "css":
         case "xml":
         case "bash":
+        case "ps1":
           extension = directive.name;
           args = directive.arg.split(' ');
           path = args[0];
