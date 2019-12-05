@@ -332,7 +332,7 @@ class FileDirective extends BaseDirective
         if elm.attr 'last_line'
             @last_line = parseInt (elm.attr 'last_line')
 
-        if elm.attr 'ext'
+        if elm.attr 'extension'
             @extension = elm.attr 'extension'
 
         @$scope.$watch @get_file.bind(@), @on_file_watcher.bind(@)
@@ -374,22 +374,31 @@ class FileDirective extends BaseDirective
         ###
         @$elm.empty()
 
-        pre = "<pre></pre>"
+        pre = "<pre class='line-numbers'></pre>"
         pre = angular.element pre
-        pre.text @text
+        #pre.text @text
 
         if @extension
-            code_html = "<code class='#{@extension}'></code>"
+            code_html = "<code class='language-#{@extension} line-numbers'></code>"
         else
             code_html = "<code></code>"
 
         code_elm = angular.element code_html
-        code_elm.append pre
+        #code_elm.append pre
+
+        code_elm.text @text
+
+        pre.append code_elm
 
         # hightlight on a case by case basis
-        hljs.highlightBlock code_elm[0]
+        #hljs.highlightBlock code_elm[0]
+        #hljs.lineNumbersBlock code_elm[0]
 
-        @$elm.append code_elm
+        Prism.highlightElement code_elm[0]
+
+        #@$elm.append code_elm
+        @$elm.append pre
+
 
 
 # XXX: PopupDirective is not yet implemeted

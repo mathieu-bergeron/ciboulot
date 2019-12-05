@@ -390,7 +390,7 @@
       if (elm.attr('last_line')) {
         this.last_line = parseInt(elm.attr('last_line'));
       }
-      if (elm.attr('ext')) {
+      if (elm.attr('extension')) {
         this.extension = elm.attr('extension');
       }
       return this.$scope.$watch(this.get_file.bind(this), this.on_file_watcher.bind(this));
@@ -436,18 +436,18 @@
        */
       var code_elm, code_html, pre;
       this.$elm.empty();
-      pre = "<pre></pre>";
+      pre = "<pre class='line-numbers'></pre>";
       pre = angular.element(pre);
-      pre.text(this.text);
       if (this.extension) {
-        code_html = "<code class='" + this.extension + "'></code>";
+        code_html = "<code class='language-" + this.extension + " line-numbers'></code>";
       } else {
         code_html = "<code></code>";
       }
       code_elm = angular.element(code_html);
-      code_elm.append(pre);
-      hljs.highlightBlock(code_elm[0]);
-      return this.$elm.append(code_elm);
+      code_elm.text(this.text);
+      pre.append(code_elm);
+      Prism.highlightElement(code_elm[0]);
+      return this.$elm.append(pre);
     };
 
     return FileDirective;

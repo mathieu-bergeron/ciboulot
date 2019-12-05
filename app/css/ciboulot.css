@@ -100,6 +100,14 @@ pre > code {
     user-select: none;
 }
 
+
+pre > code[class*="language-"]{
+    font-size:12px;
+    overflow: visible;
+    padding:0px;
+}
+
+
 .pseudo{
     display:block;
     padding:10px;
