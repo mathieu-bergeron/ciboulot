@@ -67,9 +67,11 @@ class ErrorDirective extends BaseDirective
     link: (scope, elm, attrs, controller) ->
         super scope, elm, attrs, controller
 
-        msg = "resource not found: #{@$elm.attr 'src'}"
+        @$elm.append "<h1>En construction...</h1><br><br><center>🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧</center><!--#{@$elm.attr 'src'}-->"
 
-        @$elm.text msg
+        #msg = "<h1>En construction...</h1> #{@$elm.attr 'src'}"
+
+        #@$elm.text msg
 
 # Directive class
 class ResourceDirective extends BaseDirective

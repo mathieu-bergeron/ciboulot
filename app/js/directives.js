@@ -64,10 +64,8 @@
     ErrorDirective.prototype.__name = 'error';
 
     ErrorDirective.prototype.link = function(scope, elm, attrs, controller) {
-      var msg;
       ErrorDirective.__super__.link.call(this, scope, elm, attrs, controller);
-      msg = "resource not found: " + (this.$elm.attr('src'));
-      return this.$elm.text(msg);
+      return this.$elm.append("<h1>En construction...</h1><br><br><center>🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧</center><!--" + (this.$elm.attr('src')) + "-->");
     };
 
     return ErrorDirective;
