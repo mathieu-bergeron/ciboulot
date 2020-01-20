@@ -177,7 +177,22 @@ class MarkdownService extends BaseService
 
             when "proc-list"
                 """<ul id='proc-list'></ul>"""
-            when "java", "html", "css"
+            when "kbd"
+                separateurs = /[ +]/
+                seulement_les_separateurs = directive.text[0]
+                touches = directive.text[0].split separateurs
+                for touche in touches
+                    seulement_les_separateurs = seulement_les_separateurs.replace(touche, "")
+                retour = ""
+
+                for i in [0..seulement_les_separateurs.length]
+                    touche = touches[i]
+                    retour += """<kbd>#{touche}</kbd>"""
+                    retour += seulement_les_separateurs.charAt(i)
+
+                retour
+
+            when "java", "html", "css", "xml", "bash", "ps1"
                 extension = directive.name
                 args = directive.arg.split ' '
                 path = args[0]

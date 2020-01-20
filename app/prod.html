@@ -4,13 +4,19 @@
   <meta charset="utf-8">
   <title>ciboulot</title>
   <link rel="stylesheet" href="/__app/css/ciboulot.css"/>
-  <link rel="stylesheet" href="/__app/lib/highlight/styles/docco.css">
+  <link rel="stylesheet" href="/__app/lib/prism/prism.css"/>
   <link href="https://fonts.googleapis.com/css?family=Fira+Mono" rel="stylesheet"> 
 </head>
 <body ng-controller="root" root>
-  <script src="/__app/lib/angular/angular.min.js"></script>
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  -->
+
+  <script src="/__app/lib/angular/angular.js"></script>
   <script src="/__app/lib/showdown/Markdown.Converter.js"></script>
-  <script src="/__app/lib/highlight/highlight.pack.js"></script>
+
+  <script src="/__app/lib/prism/prism.js"></script>
+
   <script src="/__app/lib/fabric/all.js"></script>
   <script src="/__app/js/globals.js"></script>
   <script src="/__app/js/services.js"></script>
@@ -19,9 +25,8 @@
   <script src="/__app/js/directives.js"></script>
   <script src="/__app/js/app.js"></script>
 
-  <script>
-    hljs.configure({languages: ['java','html','css']})
-  </script>
+
+
 
 
 </body>

@@ -161,7 +161,7 @@
     };
 
     MarkdownService.prototype.html_of_directive = function(directive) {
-      var args, extension, filename, first_line, last_line, path, path_id;
+      var args, extension, filename, first_line, i, j, k, last_line, len, path, path_id, ref, retour, separateurs, seulement_les_separateurs, touche, touches;
       switch (directive.name) {
         case "embed":
           path = this.path_manipulator.resolve_path(this.src, directive.arg);
@@ -179,9 +179,27 @@
           return "<a class='link-a' href='" + path + "'>" + directive.text[0] + "</a>";
         case "proc-list":
           return "<ul id='proc-list'></ul>";
+        case "kbd":
+          separateurs = /[ +]/;
+          seulement_les_separateurs = directive.text[0];
+          touches = directive.text[0].split(separateurs);
+          for (j = 0, len = touches.length; j < len; j++) {
+            touche = touches[j];
+            seulement_les_separateurs = seulement_les_separateurs.replace(touche, "");
+          }
+          retour = "";
+          for (i = k = 0, ref = seulement_les_separateurs.length; 0 <= ref ? k <= ref : k >= ref; i = 0 <= ref ? ++k : --k) {
+            touche = touches[i];
+            retour += "<kbd>" + touche + "</kbd>";
+            retour += seulement_les_separateurs.charAt(i);
+          }
+          return retour;
         case "java":
         case "html":
         case "css":
+        case "xml":
+        case "bash":
+        case "ps1":
           extension = directive.name;
           args = directive.arg.split(' ');
           path = args[0];
@@ -213,7 +231,7 @@
     };
 
     MarkdownService.prototype.process_name_arg = function(name_arg) {
-      var directive, i, len, name_arg_match, name_arg_pattern, text, text_match, text_pattern;
+      var directive, j, len, name_arg_match, name_arg_pattern, text, text_match, text_pattern;
       directive = {
         name: '',
         arg: '',
@@ -230,8 +248,8 @@
       text_pattern = new RegExp(this.__ONE_TEXT, 'g');
       text_match = name_arg.match(text_pattern);
       if (text_match !== null) {
-        for (i = 0, len = text_match.length; i < len; i++) {
-          text = text_match[i];
+        for (j = 0, len = text_match.length; j < len; j++) {
+          text = text_match[j];
           text = text.substring(1, text.length - 1);
           directive.text.push(text);
         }
@@ -363,21 +381,21 @@
     '$log', function($log) {
       var first_child_of_class_rec;
       first_child_of_class_rec = function(elm, _class) {
-        var child, children, i, j, k, len, len1, len2, ref, result;
+        var child, children, j, k, l, len, len1, len2, ref, result;
         children = [];
         ref = elm.children();
-        for (i = 0, len = ref.length; i < len; i++) {
-          child = ref[i];
+        for (j = 0, len = ref.length; j < len; j++) {
+          child = ref[j];
           children.push(angular.element(child));
         }
-        for (j = 0, len1 = children.length; j < len1; j++) {
-          child = children[j];
+        for (k = 0, len1 = children.length; k < len1; k++) {
+          child = children[k];
           if (child.hasClass(_class)) {
             return child;
           }
         }
-        for (k = 0, len2 = children.length; k < len2; k++) {
-          child = children[k];
+        for (l = 0, len2 = children.length; l < len2; l++) {
+          child = children[l];
           result = first_child_of_class_rec(child, _class);
           if (result !== void 0) {
             return result;
