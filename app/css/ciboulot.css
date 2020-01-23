@@ -85,12 +85,13 @@ pre > code {
     background-color:black;
     color:lightgreen;
     display:block;
-    overflow: auto;
+    overflow: visible;
     padding:20px;
     margin-right:20px;
     font-weight:bold;
     border-radius: 10px;
     font-family: 'Fira Mono', monospace;
+    font-size:12px;
 
     -webkit-touch-callout: none;
     -webkit-user-select: none;
