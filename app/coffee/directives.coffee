@@ -69,6 +69,8 @@ class ErrorDirective extends BaseDirective
 
         @$elm.append "<h1>En construction...</h1><br><br><center>🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧</center><!--#{@$elm.attr 'src'}-->"
 
+        document.title = "En construction"
+
         #msg = "<h1>En construction...</h1> #{@$elm.attr 'src'}"
 
         #@$elm.text msg
@@ -300,6 +302,11 @@ class MarkdownDirective extends ModeDirective
             compiled_markdown = (@$compile markdown_html) @$scope
 
             @markdown_elm.append compiled_markdown
+
+            title = @markdown_elm.find("h1").text()
+
+            if title?
+                document.title = title
 
         else if @mode == 'edit'
             @markdown_elm.text markdown_text

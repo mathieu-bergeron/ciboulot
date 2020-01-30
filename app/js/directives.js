@@ -65,7 +65,8 @@
 
     ErrorDirective.prototype.link = function(scope, elm, attrs, controller) {
       ErrorDirective.__super__.link.call(this, scope, elm, attrs, controller);
-      return this.$elm.append("<h1>En construction...</h1><br><br><center>🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧</center><!--" + (this.$elm.attr('src')) + "-->");
+      this.$elm.append("<h1>En construction...</h1><br><br><center>🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧&nbsp;&nbsp;🚧</center><!--" + (this.$elm.attr('src')) + "-->");
+      return document.title = "En construction";
     };
 
     return ErrorDirective;
@@ -310,7 +311,7 @@
     MarkdownDirective.prototype.__injections = ModeDirective.prototype.__injections.concat(['MarkdownService', '$interpolate']);
 
     MarkdownDirective.prototype.display = function() {
-      var compiled_markdown, interpolated_markdown, markdown_html, markdown_service, markdown_text, procs_cover_elm, procs_elm;
+      var compiled_markdown, interpolated_markdown, markdown_html, markdown_service, markdown_text, procs_cover_elm, procs_elm, title;
       this.$elm.empty();
       markdown_text = this.resource['data']['text'];
       this.markdown_elm = angular.element("<div class='markdown'></div>");
@@ -346,7 +347,11 @@
         markdown_service = new this.MarkdownService(interpolated_markdown, this.resource_id, this.mode);
         markdown_html = markdown_service.get_html();
         compiled_markdown = (this.$compile(markdown_html))(this.$scope);
-        return this.markdown_elm.append(compiled_markdown);
+        this.markdown_elm.append(compiled_markdown);
+        title = this.markdown_elm.find("h1").text();
+        if (title != null) {
+          return document.title = title;
+        }
       } else if (this.mode === 'edit') {
         return this.markdown_elm.text(markdown_text);
       }
