@@ -24,7 +24,7 @@ The resource files are processed .md and .yaml files.
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import application
+from server import application
 
 def launch(port):
     application.serve_forever(port)

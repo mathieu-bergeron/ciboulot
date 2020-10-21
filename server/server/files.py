@@ -107,7 +107,7 @@ class FileHandler(tornado.web.RequestHandler):
 
         self.set_header('Content-Type', content_type)
 
-        with open(target_path) as target_file:
+        with open(target_path, 'rb') as target_file:
             self.write(target_file.read())
 
     def serve_resource(self, target_path):

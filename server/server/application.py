@@ -21,8 +21,8 @@ import tornado
 import tornado.web
 import tornado.ioloop
 
-from sockets import SocketHandler
-from files import FileHandler
+from server.sockets import SocketHandler
+from server.files import FileHandler
 
 """
 Module creates a tornado application
