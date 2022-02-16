@@ -401,7 +401,10 @@
 
     FileDirective.prototype.get_file = function() {
       this.file = this.$rootScope.__files[this.file_path];
-      this.file = JSON.stringify(this.file);
+      this.$log.info(String(this.file));
+      if (String(this.file) === "[object Object]") {
+        this.file = JSON.stringify(this.file);
+      }
       return this.file;
     };
 
