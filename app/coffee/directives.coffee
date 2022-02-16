@@ -350,7 +350,7 @@ class FileDirective extends BaseDirective
         @file = @$rootScope.__files[@file_path]
         @$log.info (String(@file))
         if String(@file) == "[object Object]"
-            @file = JSON.stringify(@file)
+            @file = JSON.stringify(@file, null, 2)
         @file
 
     on_file_watcher: (file, old_file) ->

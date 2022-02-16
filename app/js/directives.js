@@ -403,7 +403,7 @@
       this.file = this.$rootScope.__files[this.file_path];
       this.$log.info(String(this.file));
       if (String(this.file) === "[object Object]") {
-        this.file = JSON.stringify(this.file);
+        this.file = JSON.stringify(this.file, null, 2);
       }
       return this.file;
     };
