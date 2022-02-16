@@ -348,6 +348,7 @@ class FileDirective extends BaseDirective
 
     get_file: () ->
         @file = @$rootScope.__files[@file_path]
+        @file = JSON.stringify(@file)
         @file
 
     on_file_watcher: (file, old_file) ->

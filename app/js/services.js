@@ -200,6 +200,7 @@
         case "xml":
         case "bash":
         case "ps1":
+        case "json":
           extension = directive.name;
           args = directive.arg.split(' ');
           path = args[0];

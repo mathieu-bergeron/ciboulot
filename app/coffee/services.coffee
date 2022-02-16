@@ -192,7 +192,7 @@ class MarkdownService extends BaseService
 
                 retour
 
-            when "java", "html", "css", "xml", "bash", "ps1"
+            when "java", "html", "css", "xml", "bash", "ps1", "json"
                 extension = directive.name
                 args = directive.arg.split ' '
                 path = args[0]
