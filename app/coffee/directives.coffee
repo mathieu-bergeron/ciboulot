@@ -1018,6 +1018,8 @@ class RootDirective extends ResourceDirective
                 	    <img alt='Creative Commons Attribution' style='border-width:0' src='/__app/images/by.svg' width='46px'/></a>
                         <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>
                 	    <img alt='Creative Commons ShareAlike' style='border-width:0' src='/__app/images/sa.svg' width='46px'/></a>
+                	    <br>
+                        <a ref="" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr"><!--Creative Commons<br>-->Attribution - Partage dans les Mêmes Conditions</a><!--<br>4.0 International</a>-->
                 	    </div></center>
                 	    """
 
