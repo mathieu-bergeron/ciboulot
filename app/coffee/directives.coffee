@@ -134,6 +134,7 @@ class ResourceDirective extends BaseDirective
                 @$scope[name] = @resource.data[name]
 
 
+
 class EmbedDirective extends ResourceDirective
     __name: 'embed'
 
@@ -531,6 +532,7 @@ class ProcDirective extends HashDirective
             li.append proc_title_a
 
             @proc_list.append li
+
 
         # watch for visibility
         @$scope.$watch (@watch_visible.bind @), (@on_visible_watcher.bind @)
@@ -1006,6 +1008,20 @@ class RootDirective extends ResourceDirective
         @$scope.$watch @get_search.bind(@), @on_search_watcher.bind(@)
         @$scope.$watch (@hash_watcher.bind @), (@on_hash_watcher.bind @)
 
+    display: () ->
+        super
+        
+        license_div = angular.element """<br><br><center><div class='license'>
+                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>
+                	    <img alt='Creative Commons License' style='border-width:0' src='/__app/images/cc.svg' width='46px'/></a>
+                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>
+                	    <img alt='Creative Commons Attribution' style='border-width:0' src='/__app/images/by.svg' width='46px'/></a>
+                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>
+                	    <img alt='Creative Commons ShareAlike' style='border-width:0' src='/__app/images/sa.svg' width='46px'/></a>
+                	    </div></center>
+                	    """
+
+        @$elm.append license_div
 
 # FIXME: if this is ModeDirective
 #        then there is some cycle in the digest when

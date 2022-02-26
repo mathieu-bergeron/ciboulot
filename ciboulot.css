@@ -1,0 +1,428 @@
+/* vim: set fileencoding=utf-8 */
+
+/* Ciboulot: a simple Web App for text-based content and Angular.js delivery */
+/* Copyright (C) 2014 Mathieu Bergeron */
+
+/* This program is free software: you can redistribute it and/or modify */
+/* it under the terms of the GNU Affero General Public License as */
+/* published by the Free Software Foundation, either version 3 of the */
+/* License, or (at your option) any later version. */
+
+/* This program is distributed in the hope that it will be useful, */
+/* but WITHOUT ANY WARRANTY; without even the implied warranty of */
+/* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the */
+/* GNU Affero General Public License for more details. */
+
+/* You should have received a copy of the GNU Affero General Public License */
+/* along with this program.  If not, see <http://www.gnu.org/licenses/>. */
+
+html{
+    text-rendering: optimizelegibility;
+    margin:0px;
+    padding:0px;
+}
+
+a:focus {
+    outline: thin dotted;
+}
+
+a:hover {
+    border-bottom:none;
+}
+
+a {
+    color: rgb(89, 51, 204);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    -moz-text-blink: none;
+    -moz-text-decoration-line: none;
+    -moz-text-decoration-style: solid;
+    -moz-text-decoration-color: rgba(51, 119, 170, 0.33);
+    text-decoration:none;
+}
+
+body{
+    background-color:white;
+    padding:0px;
+    margin:0px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Corben', Georgia, Times, serif;
+    padding-left:10px;
+}
+
+h1, h2{
+    background-color:burlywood;
+} 
+
+h1{
+    padding-top:8px;
+} 
+
+h2{
+    padding-top:6px;
+} 
+
+
+h3{
+}
+
+p, div {
+    font-family: 'Nobile', Helvetica, Arial, sans-serif;
+    padding-left:5px;
+}
+
+ol > li > ol {
+    list-style-type:lower-alpha;
+}
+
+pre > code {
+    background-color:black;
+    color:lightgreen;
+    display:block;
+    overflow: auto;
+    padding:20px;
+    margin-right:20px;
+    font-weight:bold;
+    border-radius: 10px;
+    font-family: 'Fira Mono', monospace;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.pseudo{
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
+    background-color: #F8F8FF;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    overflow: visible;
+    width: 750px;
+}
+
+.pseudo code{
+    background-color: #ECECF0;
+}
+
+.pseudo ol > li > ol > li > ol{
+    list-style-type:lower-roman;
+}
+
+.pseudo ol > li > ol > li > ol > li > ol{
+    list-style-type:lower-greek;
+}
+
+.pseudo li{
+    padding-top:20px;
+}
+
+.pseudo li > ol > li{
+    padding-top:5px;
+}
+
+.pseudo li > ul > li{
+    padding-top:5px;
+}
+
+.pseudo ul{
+    list-style-type:square;
+}
+
+code.java {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    overflow: visible;
+    width: 750px;
+}
+
+code.html {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
+
+    overflow: visible;
+    width: 750px;
+}
+
+code.css {
+    display:block;
+    padding:10px;
+    padding-left:20px;
+    margin-right:20px;
+    border-radius: 10px;
+
+    overflow: visible;
+    width: 750px;
+}
+
+table{
+    margin:auto;
+    border-collapse: separate;
+    empty-cells: hide;
+}
+
+table,th,tr,td {
+    border: 1px solid gray;
+    border-spacing: 0px;
+}
+
+th,tr,td {
+    padding:10px;
+}
+
+th {
+    background-color: lightgray;
+}
+
+.root{
+    background-color:cornsilk;
+    width:650px;
+    margin:auto;
+    margin-top:0px;
+    margin-bottom:0px;
+    padding:0px;
+    padding-top:1px;
+}
+
+.markdown{
+}
+
+.embed[popup]{
+    display:inline;
+}
+
+.embed{
+    position:relative;
+    left:-15px;
+}
+
+.cover{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    border:0px;
+    padding:0px;
+    margin:0px;
+    background-color: black;
+    opacity: 0.7;
+}
+
+.proc-partial{
+    top: 0px;
+    width:650px;
+    height:100%;
+    position:absolute;
+}
+
+.proc-container{
+    background-color:cornsilk;
+    width:650px;
+    margin:auto;
+    margin-top:100px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 0px;
+    line-height: 1.3em;
+    border-radius: 10px;
+    box-shadow: 0 0 0 4px burlywood, 2px 1px 6px 4px burlywood;
+}
+
+.lower-canvas{
+    position:relative;
+    left:-20px;
+}
+
+.proc-button{
+    padding:10px;
+    background-color:burlywood;
+    width:10px;
+    line-height: 1.3em;
+    border-radius: 10px;
+    box-shadow: 0 0 0 4px cornsilk, 2px 1px 6px 4px cornsilk;
+
+    color:white;
+    font-weight:bold;
+}
+
+.proc-hide{
+    position:relative;
+    left:100%;
+    top:-20px;
+}
+
+.proc-title > p {
+    display:inline;
+}
+
+
+.steps-previous{
+    position:relative;
+    left:-10px;
+    top:-10px;
+}
+
+.steps-next{
+    position:relative;
+    left:5px;
+    top:-10px;
+}
+
+.step-title{
+    display:inline;
+    position:relative;
+    left: 40px;
+    font-weight:normal;
+    top:-10px;
+}
+
+.steps{
+    position:relative;
+    padding:0px;
+    margin:0px;
+    top:-30px;
+}
+
+.step-enum{
+    padding:10px;
+}
+
+.not-current-step{
+    opacity:0.3;
+}
+
+.current-step-enum{
+}
+
+.step-a{
+    display:inline;
+    color:black;
+}
+
+.step-a > p{
+    display:inline;
+}
+
+.tabs-title > p{
+    display:inline;
+}
+
+.tab > p{
+    display:inline;
+}
+
+.title-static{
+    position: static;
+    margin-top:100px;
+    display: block;
+    width: auto;
+}
+
+.tabs-header{
+    position:relative;
+    left:-200px;
+    width:850px;
+}
+
+.tabs-title{
+    display:inline-block;
+    width:200px;
+    background-color:darkgray;
+    margin-right:50px;
+}
+
+.tabs{
+}
+
+.tab{
+    margin-left:10px;
+}
+
+.tab-text{
+    margin-top:40px;
+}
+
+.current-tab{
+    background-color:black;
+}
+
+
+.questions-row{
+    display:block;
+    margin:20px;
+}
+
+.questions-title{
+    margin:auto;
+    font-weight:bold;
+}
+
+.questions-title-error{
+    background-color: rgba(255,0,0,0.3)
+}
+
+.questions-title-solution{
+    background-color: rgba(0,255,0,0.3)
+}
+
+.questions-cell{
+    width:45%;
+    display:inline-block;
+    margin-left:15px;
+}
+
+.questions-cell-error{
+    background-color: rgba(255,0,0,0.3)
+}
+
+.questions-cell-solution{
+    background-color: rgba(0,255,0,0.3)
+}
+
+
+kbd {
+    display: inline-block;
+    margin: 0 .1em;
+    padding: .3em .6em;
+    font-family: Arial,"Helvetica Neue",Helvetica,sans-serif;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1.4;
+    /*color: #242729;*/
+    color: black;
+    text-shadow: 0 1px 0 #FFF;
+    background-color: #e1e3e5;
+    border: 1px solid #adb3b9;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(12,13,14,0.2),0 0 0 2px #FFF inset;
+    white-space: nowrap;
+}
+

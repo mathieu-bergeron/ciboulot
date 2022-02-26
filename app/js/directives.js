@@ -1078,6 +1078,13 @@
       return this.$scope.$watch(this.hash_watcher.bind(this), this.on_hash_watcher.bind(this));
     };
 
+    RootDirective.prototype.display = function() {
+      var license_div;
+      RootDirective.__super__.display.apply(this, arguments);
+      license_div = angular.element("<br><br><center><div class='license'>\n                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>\n<img alt='Creative Commons License' style='border-width:0' src='/__app/images/cc.svg' width='46px'/></a>\n                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>\n<img alt='Creative Commons Attribution' style='border-width:0' src='/__app/images/by.svg' width='46px'/></a>\n                        <a ref='' href='https://creativecommons.org/licenses/by-sa/4.0/deed.fr' class='icons d-block'>\n<img alt='Creative Commons ShareAlike' style='border-width:0' src='/__app/images/sa.svg' width='46px'/></a>\n</div></center>");
+      return this.$elm.append(license_div);
+    };
+
     return RootDirective;
 
   })(ResourceDirective);

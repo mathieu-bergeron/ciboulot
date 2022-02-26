@@ -1,0 +1,408 @@
+Loaded page. URL = http://ciboulot.ca/cegep/420-257-MO/01/formatif_01 content length = 37306 status = success
+<div class="root ng-scope" ng-controller="markdown" src="/cegep/420-257-MO/01/formatif_01" markdown=""><div class="markdown"><h1 class="ng-scope">Laboratoire formatif 01</h1>
+
+<h2 class="ng-scope">Objectif</h2>
+
+<ul class="ng-scope">
+<li>Exécuter une VM grace aux technologies suivantes:
+<ul><li><strong>KVM</strong>: pilote de virtualisation (virtualisation matérielle)</li>
+<li><strong>QEMU</strong>: émulateur de PC</li>
+<li><strong>libvirtd</strong>: démon de virtualisation (hyperviseur)</li>
+<li><strong>virsh</strong>: ligne de commande (<em>shell</em>) pour l'hyperviseur</li>
+<li><strong>virt-viewer</strong>: connexion graphique au <em>bureau</em> de la VM</li></ul></li>
+</ul>
+
+<p class="ng-scope">NOTES:</p>
+
+<ul class="ng-scope">
+<li>Bien porter attention aux messages d'erreur</li>
+<li>Il est recommandé d'utiliser votre usager normal.</li>
+</ul>
+
+<h2 class="ng-scope">Informations utiles</h2>
+
+<h3 class="ng-scope">Usager/passe</h3>
+
+<ul class="ng-scope">
+<li>Sur <code>form01</code>: admin/Admin257</li>
+</ul>
+
+<h2 class="ng-scope">Procédures utiles</h2>
+
+<ul id="proc-list" class="ng-scope"><li><a href="#virsh-net-define" class="proc-title"><p>Définir un réseau avec <code>virsh</code></p></a></li><li><a href="#virsh-define" class="proc-title"><p>Définir un domaine avec <code>virsh</code></p></a></li><li><a href="#virt-viewer" class="proc-title"><p>Se connecter au bureau d'une VM avec <code>virt-viewer</code></p></a></li><li><a href="#virsh-start" class="proc-title"><p>Démarrer une VM en <code>virsh</code></p></a></li><li><a href="#virsh-attach-interface" class="proc-title"><p>Attacher une interface réseau avec <code>virsh</code></p></a></li><li><a href="#virsh-edit" class="proc-title"><p>Éditer le .xml d'une VM déjà définie</p></a></li><li><a href="#virsh-shutdown" class="proc-title"><p>Éteindre une VM en <code>virsh</code></p></a></li><li><a href="#virsh" class="proc-title"><p>Lancer <code>virsh</code></p></a></li><li><a href="#virsh-connect" class="proc-title"><p>Se connecter à l'hyperviseur</p></a></li></ul>
+
+<h2 class="ng-scope">Préambule</h2>
+
+<ol class="ng-scope">
+<li><p>Créer un répertoire où stoquer vos images de VM, p.ex:</p>
+
+<pre><code>$ mkdir /home/virt
+$ mkdir /home/virt/images
+</code></pre></li>
+<li><p>Copier l'image <code>form01.img</code> dans ce répertoire, p.ex:</p>
+
+<pre><code>$ mount /dev/sdc1 /mnt
+$ cp -rf /mnt/images/form01.img /home/virt/images/
+</code></pre></li>
+<li><p>Copier les fichiers de configuration dans <code>/home/virt</code>, p.ex:</p>
+
+<pre><code>$ cp -rf /mnt/conf /home/virt/
+</code></pre></li>
+<li><p>Donner les droits à votre usager, p.ex:</p>
+
+<pre><code>$ chown -R mbergeron.mbergeron /home/virt/
+
+$ cp /mnt/conf/polkit/* /etc/polkit-1/localauthority/50-local.d/
+$ vim /etc/polkit-1/localauthority/50-local.d/50-localhost-libvirt-access.pkla
+
+       [Donner acces à l'usager mbergeron]
+       Identity=unix-user:mbergeron
+       Action=org.libvirt.unix.manage
+       ResultAny=yes
+       ResultInactive=yes
+       ResultActive=yes
+</code></pre></li>
+</ol>
+
+<h2 class="ng-scope">Travail à réaliser</h2>
+
+<p class="ng-scope">Commencer ici à documenter pour votre rapport de laboratoire.</p>
+
+<h3 class="ng-scope">Créer le réseau virtuel <code>net257</code></h3>
+
+<ol class="ng-scope">
+<li>À l'aide du fichier <code>net257.xml</code>, <span src="/cegep/420-257-MO/proc/virsh-net-define" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-net-define">définir</a>
+</span> le réseau virtuel <code>net257</code></li>
+<li><span src="/cegep/420-257-MO/proc/virsh-net-start" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-net-start">Démarrer</a>
+</span> le réseau virtuel <code>net257</code></li>
+</ol>
+
+<h3 class="ng-scope">Créer, démarrer et se connecter à la VM <code>form01</code></h3>
+
+<ol class="ng-scope">
+<li>À l'aide du fichier <code>form01.xml</code>, <span src="/cegep/420-257-MO/proc/virsh-define" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-define">définir</a>
+</span> la VM <code>form01</code></li>
+<li><span src="/cegep/420-257-MO/proc/virsh-start" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-start">Démarrer</a>
+</span> la VM <code>form01</code></li>
+<li><span src="/cegep/420-257-MO/proc/virt-viewer" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virt-viewer">Se connecter</a>
+</span> au bureau de la VM <code>form01</code></li>
+</ol>
+
+<h3 class="ng-scope">Ajouter une interface réseau à la VM <code>form01</code></h3>
+
+<ol class="ng-scope">
+<li><p>Soit</p>
+
+<ul><li>PREMIÈRE MÉTHODE :<span src="/cegep/420-257-MO/proc/virsh-attach-interface" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-attach-interface">Ajouter</a>
+</span> l'interface avec une commande</li>
+<li><p>DEUXIÈME MÉTHODE: <span src="/cegep/420-257-MO/proc/virsh-edit" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-edit">Éditer</a>
+</span> la définition du matériel de la VM</p>
+
+<ul><li>voir <a href="https://libvirt.org/formatdomain.html" target="_blank">https://libvirt.org/formatdomain.html</a> pour identifier le <code>.xml</code> à ajouter</li></ul></li>
+<li><p>NOTE:</p>
+
+<ul><li>le <code>TYPE</code> de la connexion est <code>network</code></li>
+<li>le <code>RESEAU</code> de la connexion est <code>net257</code></li></ul></li></ul></li>
+<li><p>Vérifier la présence de l'interface:</p>
+
+<pre><code>virsh # domiflist DOMAINE
+</code></pre></li>
+<li><p>Dans la VM, vérifier la connexion à Internet, p.ex:</p>
+
+<pre><code>$ ping 172.16.11.101
+</code></pre></li>
+</ol>
+
+<h2 class="ng-scope">Objectifs à valider</h2>
+
+<p class="ng-scope">Faire valider les objectifs suivants par l'enseignant:</p>
+
+<ol class="ng-scope">
+<li>La VM <code>form01</code> est bien démarrée</li>
+<li>La VM <code>form01</code> a accès à Internet</li>
+</ol>
+
+<h2 class="ng-scope">Épilogue</h2>
+
+<h3 class="ng-scope">Éteindre la VM</h3>
+
+<ol class="ng-scope">
+<li>Utiliser la commande <span src="/cegep/420-257-MO/proc/virsh-shutdown" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-shutdown">shutdown</a>
+</span> dans <code>virsh</code></li>
+<li>Vérifier que la VM est éteinte</li>
+</ol></div><div id="procs"><div id="procs-cover" class="cover ng-scope" style="display: none;" ng-click="hide_procs();"></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-net-define" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-net-define" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Définir un réseau avec <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li><p>Identifier le fichier <code>CONF_RESEAU</code> qui contient 
+la définition du réseau</p></li>
+<li><p>S'assurer d'être dans l'environnement <code>virsh</code></p>
+
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li><p>S'assurer d'être connecté à <code>qemu</code>:</p>
+
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Définir le réseau</p>
+
+<pre class="ng-scope"><code>  virsh # net-define /CHEMIN/CONF_RESEAU
+</code></pre></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">Le réseau apparaît dans la liste de réseau</p>
+
+<pre class="ng-scope"><code>  virsh # net-list
+</code></pre></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-net-define__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-net-define__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>erreur: Impossible de définir le réseau depuis /CHEMIN/CONF_RESEAU</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que le fichier <code>.xml</code> est correct, p.ex:</p>
+
+<ul class="ng-scope">
+<li>Est-ce que le nom du réseau est défini?</li>
+<li>Est-ce que les adresses du réseau sont correctes?</li>
+</ul></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>network NETWORK already exists</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Ajuster le fichier <code>.xml</code> pour donner un nouveau nom au réseau</p>
+
+<ul class="ng-scope">
+<li>Spécificer aussi un nom de pont virtuel non utilisé, p.ex: <code>virbr5</code></li>
+</ul></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-define" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-define" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Définir un domaine avec <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>S'assurer d'être dans l'environnement <code>virsh</code>
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li>S'assurer d'être connecté à <code>qemu</code>:
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Définir la VM:</p>
+
+<pre class="ng-scope"><code>  virsh # define CHEMIN/CONF_DOMAINE
+</code></pre>
+
+<p class="ng-scope">Lancer la VM:</p>
+
+<pre class="ng-scope"><code>  virsh # start DOMAINE
+</code></pre>
+
+<p class="ng-scope">Ne plus définir la VM:</p>
+
+<pre class="ng-scope"><code>  virsh # undefine DOMAINE
+</code></pre>
+
+<p class="ng-scope">Voir le <code>.xml</code> de la VM:</p>
+
+<pre class="ng-scope"><code>  virsh # dumpxml DOMAINE
+</code></pre>
+
+<p class="ng-scope">Éditer le <code>.xml</code> de la VM</p>
+
+<pre class="ng-scope"><code>  virsh # edit DOMAINE
+</code></pre></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">Vérifier</p>
+
+<pre class="ng-scope"><code>  virsh # list --all
+</code></pre></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-define__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-define__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>erreur: Impossible de définir le réseau depuis /CHEMIN/CONF_RESEAU</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que le fichier <code>.xml</code> est correct, p.ex:</p>
+
+<ul class="ng-scope">
+<li>Est-ce que le nom de la VM est défini?</li>
+<li>Est-ce que les adresses du réseau sont correctes?</li>
+</ul></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>domain DOMAINE already exists</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Donner un nom non-utilisé au nouveau domaine</p></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virt-viewer" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virt-viewer" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Se connecter au bureau d'une VM avec <code>virt-viewer</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><p class="ng-scope">Identifier le DOMAINE (le nom de la VM)</p></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Lancer <code>virt-viewer</code> avec les arguments ci-bas</p>
+
+<pre class="ng-scope"><code>  $ virt-viewer -c qemu:///system DOMAINE
+</code></pre></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">Une fenêtre est créée avec le bureau de la VM</p></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virt-viewer__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virt-viewer__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>bash: virt-viewer : commande introuvable</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Installer un paquet <code>yum</code> qui contient <code>virt-viewer</code>, voir <span src="/cegep/420-257-MO/proc/yum-install" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#yum-install">yum-install</a>
+</span></p></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>cannot open display</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Donner les droits à tous les usagers de la machine de lancer une fenêtre en mode graphique:</p>
+
+<ul class="ng-scope">
+<li>Par défaut, seul l'usager qui s'est connecté en mode graphique peut créer des fenêtres</li>
+<li><p>Dans un console appartenant à l'usager qui s'est connecté en mode graphique:</p>
+
+<p>$ xhost +localhost</p></li>
+</ul></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-start" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-start" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Démarrer une VM en <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>Identifier le DOMAINE à démarrer (nom de la VM)</li>
+<li>S'assurer d'être dans l'environnement <code>virsh</code>
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li>S'assurer de se connecter à l'hyperviseur
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+<li><p>S'assurer que la VM est éteinte</p>
+
+<pre><code>  virsh # list --all
+</code></pre></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Démarrer</p>
+
+<pre class="ng-scope"><code>      virsh # start DOMAINE
+</code></pre></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">La VM devrait apparaîte comme <code>en cours d'exécution</code>:</p>
+
+<pre class="ng-scope"><code>      virsh # list --all
+</code></pre></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-start__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-start__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>Domaine non trouvé</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que la VM est définie</p>
+
+<ul class="ng-scope">
+<li>voir <span src="/cegep/420-257-MO/proc/virsh-define" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-define">virsh-define</a>
+</span></li>
+</ul></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>Réseau non trouvé&nbsp;: no network with matching name 'RESEAU'</code></p></div><div class="questions-cell questions-cell-solution"><ul class="ng-scope">
+<li>S'assurer que le réseau <code>RESEAU</code> existe</li>
+<li>Au besoin, modifier la définition de la VM avec <span src="/cegep/420-257-MO/proc/virsh-edit" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-edit">virsh-edit</a>
+</span></li>
+</ul></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>Cannot access storage file /CHEMIN/IMAGE.img</code></p></div><div class="questions-cell questions-cell-solution"><ul class="ng-scope">
+<li>S'assurer que le <code>CHEMIN/IMAGE.img</code> est exact
+<ul><li>au besoin corrigé avec <span src="/cegep/420-257-MO/proc/virsh-edit" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-edit">virsh-edit</a>
+</span></li></ul></li>
+<li>S'assurer que le format de <code>IMAGE.img</code> correspond à ce qui est
+demandé dans le .xml de la VM
+<ul><li>Au besoin, convertir le format de <code>IMAGE.img</code> avec <span src="/cegep/420-257-MO/proc/qemu-img-convert" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#qemu-img-convert">qemu-img convert</a>
+</span></li></ul></li>
+</ul></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-attach-interface" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-attach-interface" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Attacher une interface réseau avec <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>Identifier la VM <code>DOMAINE</code></li>
+<li><p>Identifier le réseau <code>RESEAU</code></p></li>
+<li><p>S'assurer d'être dans l'environnement <code>virsh</code></p>
+
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li>S'assurer d'être connecté à <code>qemu</code>:
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+<li>S'assurer que le domaine est défini:
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-define" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-define">virsh-define</a>
+</span></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Attacher une interface avec la commande <code>attach-interface</code></p>
+
+<pre class="ng-scope"><code>  virsh # attach-interface DOMAINE TYPE RESEAU
+</code></pre>
+
+<ul class="ng-scope">
+<li>Pour un réseau virtuel, le type est <code>network</code>; sinon le type est <code>bridge</code></li>
+<li>Ajouter <code>--config</code> pour ajouter l'interface seulement après le redémarrage</li>
+<li>Ajouter <code>--model virtio</code> pour un interface plus rapide, si la VM le supporte</li>
+</ul>
+
+<p class="ng-scope">Attacher une interface avec la commande <code>attach-device</code></p>
+
+<ul class="ng-scope">
+<li><code>virsh # attach-device DOMAINE CHEMIN/CONF_DISQUE.xml --config</code></li>
+</ul>
+
+<p class="ng-scope">Détacher l'interface</p>
+
+<ul class="ng-scope">
+<li><code>virsh # detach-interface DOMAINE TYPE</code>
+<ul><li>Si votre VM a plus d'une interface du même type, vous devrez fournir l'adresse MAC de l'interface à détacher, c-a-d ajouter <code>--mac ADRESSE</code></li>
+<li>trouver l'adresse MAC avec <code>virsh # domiflist DOMAINE</code></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">Lister les interfaces de la VM</p>
+
+<ul class="ng-scope">
+<li><code>virsh # domiflist DOMAINE</code></li>
+</ul></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-attach-interface__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-attach-interface__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>XML error:</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que le fichier <code>.xml</code> est correct</p></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>no support for ... in command attach-interface</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que le type de l'interface est correct (p.ex: <code>network</code>)</p></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-edit" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-edit" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Éditer le .xml d'une VM déjà définie</p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>S'assurer d'être dans l'environnement <code>virsh</code>
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li>S'assurer d'être connecté à <code>qemu</code>:
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Faire la commande</p>
+
+<pre class="ng-scope"><code>  virsh # edit DOMAINE
+</code></pre>
+
+<p class="ng-scope">Éditer le <code>.xml</code> dans votre éditeur par défaut</p>
+
+<p class="ng-scope">Sauvegarder le fichier pour mettre à jour la définition de la VM</p></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">Le fichier est sauvegardé et l'invite de commande <code>virsh #</code> réapparaît</p></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-edit__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-edit__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>XML error: ... Try again? [y,n,f,?]</code>, p.ex: * <code>Attempted double use of PCI Address</code>: deux périphériques utilise la même adresse * <code>Opening and ending tag mismatch</code>: problème de syntaxe dans le <code>.xml</code> * <code>invalid ... type</code>: option invalide dans la définition d'un des périphériques</p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Réessayer votre modification avec <code>y</code>. Canceller votre modification avec <code>n</code></p></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-shutdown" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-shutdown" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Éteindre une VM en <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>S'assurer d'être dans l'environnement <code>virsh</code>
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li></ul></li>
+<li>S'assurer de se connecter à l'hyperviseur
+<ul><li>voir <span src="/cegep/420-257-MO/proc/virsh-connect" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-connect">virsh-connect</a>
+</span></li></ul></li>
+<li>S'assurer que la VM est en cours d'exécution
+<ul><li><code>virsh # list --all</code></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Éteindre proprement:</p>
+
+<ul class="ng-scope">
+<li><code>virsh # shutdown DOMAINE</code></li>
+</ul>
+
+<p class="ng-scope">Éteindre une VM qui ne répond pas (p.ex. une VM en <code>kernel panic</code>):</p>
+
+<ul class="ng-scope">
+<li><code>virsh # destroy DOMAINE</code></li>
+</ul></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">La VM devrait apparaîte comme <code>fermée</code>:</p>
+
+<ul class="ng-scope">
+<li><code>virsh # list --all</code></li>
+</ul></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-shutdown__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh-shutdown__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>Domaine non trouvé</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">S'assurer que la VM est définie</p></div></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>le domaine n'est pas actif</code></p></div><div class="questions-cell questions-cell-solution"><ul class="ng-scope">
+<li>voir <span src="/cegep/420-257-MO/proc/virsh-define" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh-define">virsh-define</a>
+</span></li>
+</ul></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Lancer <code>virsh</code></p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>Se connecter ou personifier un usager qui a les droits d'utiliser <code>virsh</code>.</li>
+<li>Choisir un répertoire courant: ce cera le répertoire racine de la session <code>virsh</code></li>
+<li>P.ex: 
+<ul><li><code>$ cd /home/virt/</code></li></ul></li>
+</ul></spann><spann class="tab-text" style="display: block;"><p class="ng-scope">Lancer <code>virsh</code>:</p>
+
+<pre class="ng-scope"><code>$ virsh
+</code></pre>
+
+<p class="ng-scope">On peut aussi lancer <code>virsh</code> avec la connexion à l'hyperviseur:</p>
+
+<pre class="ng-scope"><code>$ virsh -c qemu:///system
+</code></pre></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">L'exécution réussie est ainsi:</p>
+
+<ul class="ng-scope">
+<li>le shell devrait changer d'invite de commande</li>
+<li><code>virsh #</code></li>
+<li>vous êtes maintenant dans l'environnement <code>virsh</code> et les commandes sont celles de <code>virsh</code>
+<ul><li><code>virsh # help</code> pour avoir un aperçu des commandes</li></ul></li>
+</ul></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh__erreurs" embed="" style="display: none;"><div class="embed ng-scope" ng-controller="questions" src="/cegep/420-257-MO/proc/virsh__erreurs" questions=""><div class="questions-table"><div class="questions-row questions-header"><span class="questions-cell questions-title questions-title-error">Erreur</span><span class="questions-cell questions-title questions-title-solution">Piste de solution</span></div><div class="questions-row"><div class="questions-cell questions-cell-error"><p class="ng-scope"><code>bash: virsh : commande introuvable</code></p></div><div class="questions-cell questions-cell-solution"><p class="ng-scope">Vérifier que <code>virsh</code> est sur le disque, voir <span src="/cegep/420-257-MO/proc/find-exec-file" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#find-exec-file">find-exec-file</a>
+</span></p></div></div></div></div></div></span></div></div></div></div></div><div ng-click="hide();" class="proc-partial ng-scope" style="display: none;"><div class="proc-container ng-scope" ng-click="$event.stopPropagation();"><a class="proc-hide proc-button" href="" ng-click="hide();">x</a><div class="steps"><div src="/cegep/420-257-MO/proc/virsh-connect" embed="" class="ng-scope"><div class="embed ng-scope" ng-controller="tabs" src="/cegep/420-257-MO/proc/virsh-connect" tabs=""><div class="tabs-header"><span class="proc-button tabs-title"><p>Se connecter à l'hyperviseur</p></span><span class="tabs"><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(0);"><p>Préparer</p></a><a href="" class="proc-button tab ng-scope current-tab" ng-click="goto_tab(1);"><p>Exécuter</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(2);"><p>Vérifier</p></a><a href="" class="proc-button tab ng-scope" ng-click="goto_tab(3);"><p>Erreurs possibles</p></a></span></div><span class="tab-text"><spann class="tab-text" style="display: none;"><ul class="ng-scope">
+<li>S'assurer d'être dans l'environnement <code>virsh</code>
+<ul><li>L'invite de commande devrait être <code>virsh #</code></li></ul></li>
+<li>voir <span src="/cegep/420-257-MO/proc/virsh" ng-controller="proc" proc="" class="ng-scope">
+<a class="proc-a" href="#virsh">virsh</a>
+</span></li>
+</ul></spann><spann class="tab-text" style="display: block;"><ul class="ng-scope">
+<li>Pour <code>qemu</code>, l'URI de connection est <code>qemu:///system</code></li>
+<li>Pour Virtual Box, l'URI de connection est <code>vbox:///session</code></li>
+<li><p>La commande de connection est <code>connect</code></p>
+
+<pre><code>  virsh # connect qemu:///system
+
+  OU
+
+  virsh # connect vbox:///session
+
+  OU
+
+  $ virsh -c qemu:///system
+
+  OU
+
+  $ virsh -c vbox:///session
+</code></pre></li>
+</ul></spann><spann class="tab-text" style="display: none;"><p class="ng-scope">L'exécution réussie est ainsi:</p>
+
+<ul class="ng-scope">
+<li>aucun message d'erreur</li>
+<li>l'invite de commande <code>virsh #</code> apparaît</li>
+</ul></spann><div class="tab-text ng-scope" src="/cegep/420-257-MO/proc/virsh-connect__erreurs" embed="" style="display: none;"></div></span></div></div></div></div></div></div></div>
